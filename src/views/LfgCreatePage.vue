@@ -34,6 +34,7 @@ const form = ref({
   seats_open: null,
   day_of_week: '',
   start_time: '',
+  end_time: '',
   timezone: 'Asia/Bangkok',
 })
 
@@ -146,6 +147,7 @@ async function loadPost() {
       seats_open: post.seats_open ?? null,
       day_of_week: post.day_of_week || '',
       start_time: (post.start_time || '').slice(0, 5),
+      end_time: (post.end_time || '').slice(0, 5),
       timezone: post.timezone || 'Asia/Bangkok',
     }
   } catch (err) {
@@ -318,6 +320,11 @@ onMounted(async () => {
               <div class="flex flex-col gap-1.5">
                 <Label>{{ t('lfg.startTime') }}</Label>
                 <Input v-model="form.start_time" type="time" />
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <Label>{{ t('lfg.endTime') }}</Label>
+                <Input v-model="form.end_time" type="time" />
               </div>
 
               <div class="flex flex-col gap-1.5">

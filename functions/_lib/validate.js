@@ -22,6 +22,21 @@ export const DISCORD_INVITE_HOSTS = [
   'canary.discord.com',
 ];
 
+/**
+ * Optional start/end sanity check. Both columns are Time, so they compare as
+ * "HH:MM" strings — but ONLY when both are present, since either may be null.
+ * Equal times are rejected too: a zero-length session is a typo, not a game.
+ */
+export function validateSessionTimes(start, end) {
+  if (!start || !end) return { ok: true };
+  const s = String(start).slice(0, 5);
+  const e = String(end).slice(0, 5);
+  if (e <= s) {
+    return { ok: false, error: 'end_time must be later than start_time' };
+  }
+  return { ok: true };
+}
+
 /** Only http(s) on an allow-listed host survives. */
 export function parseHostedUrl(value, hosts) {
   try {

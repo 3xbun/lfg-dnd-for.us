@@ -24,6 +24,7 @@ const WRITABLE = [
   'seats_open',
   'day_of_week',
   'start_time',
+  'end_time',
   'timezone',
 ];
 
@@ -125,6 +126,9 @@ export async function onRequestPost({ request, env }) {
   if (!fields.description || !String(fields.description).trim())
     return badRequest('description is required');
   if (!fields.timezone) fields.timezone = 'Asia/Bangkok';
+
+  const times = validateSessionTimes(fields.start_time, fields.end_time);
+  if (!times.ok) return badRequest(times.error);
 
   try {
     const created = await createRecord(env, TABLES.posts, fields);

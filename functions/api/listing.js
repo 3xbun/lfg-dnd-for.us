@@ -19,6 +19,7 @@ const WRITABLE = [
   'seats_open',
   'day_of_week',
   'start_time',
+  'end_time',
   'timezone',
 ];
 
@@ -79,6 +80,20 @@ export async function onRequestPatch({ request, env }) {
   try {
     const gate = await assertOwner(env, id, session);
     if (!gate.ok) return json({ ok: false, message: gate.reason }, { status: 403 });
+
+    // on a partial update, compare against the stored value for whichever half
+    // the client did not send
+    const needsCurrent = fields.start_time === undefined || fields.end_time === undefined;
+    const current = needsCurrent ? await getRecordOrNull(env, TABLES.posts, id) : null;
+    if (needsCurrent && !current) {
+      return json({ ok: false, message: 'Listing not found' }, { status: 404 });
+    }
+    const times = validateSessionTimes(
+      fields.start_time ?? current?.start_time,
+      fields.end_time ?? current?.end_time
+    );
+    if (!times.ok) return badRequest(times.error);
+
     return json({ ok: true, record: await updateRecord(env, TABLES.posts, id, fields) });
   } catch (err) {
     return json({ ok: false, message: err.message }, { status: 502 });
