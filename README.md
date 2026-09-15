@@ -56,6 +56,9 @@ Discord portal → OAuth2 → Redirects must contain the exact
 | `DELETE /api/listing?id=` | owner | remove |
 | `POST /api/join` | session | join a listing |
 | `POST /api/link` | owner | attach Facebook / Discord links |
+| `GET /api/my-listings` | session | listings you own + joined |
+| `GET /api/options` | public | SingleSelect choices, read from the DB |
+| `POST /api/report` | session | flag a listing (one per user per listing) |
 | `GET /api/auth/login` | — | redirect to Discord |
 | `GET /api/auth/discord/callback` | — | exchange code, set session cookie |
 | `GET /api/auth/me` | — | current session or 401 |
@@ -86,10 +89,29 @@ grep -rl "xc-token\|ndb.3xbun.com" dist/ src/     # expect: no output
 node scripts/smoke-functions.mjs
 ```
 
-## Known gaps (M1)
+## Caching
+
+Public reads are cacheable at the edge; anything session-specific is not:
+
+| Endpoint | Cache-Control |
+|---|---|
+| `GET /api/listings` | `public, max-age=30, s-maxage=120` |
+| `GET /api/listing` (anonymous) | `public, max-age=15` |
+| `GET /api/options` | `public, max-age=600, s-maxage=3600` |
+| `GET /api/auth/me`, `GET /api/my-listings`, `GET /api/listing` (with session) | `private, no-store` |
+
+**A session-specific response must never be shared-cacheable** — `/api/listing`
+switches to `private, no-store` the moment a cookie is present, or an owner's
+response could be replayed to another visitor.
+
+## Known gaps
 
 - `end_time` is not a column yet — listings have a start time only.
 - Discord **guild ownership** is not verified when a server is linked; proving it
   needs a live `/users/@me/guilds` call, which needs an OAuth access token the
   stateless session deliberately does not keep.
-- No report/flag table yet.
+- Reports are recorded but there is no moderator view yet — read `LFG_Reports`
+  in NocoDB.
+- No rate limiting on `POST /api/report` beyond one-per-user-per-listing.
+- `DISCORD_REDIRECT_URI` must be `/api/auth/callback` in BOTH the Pages env and
+  the Discord portal; the login route now fails loudly if the env path is stale.

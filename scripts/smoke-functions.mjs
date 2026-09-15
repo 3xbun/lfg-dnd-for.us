@@ -22,6 +22,7 @@ const files = [
   'functions/api/listing.js',
   'functions/api/options.js',
   'functions/api/my-listings.js',
+  'functions/api/report.js',
   'functions/api/join.js',
   'functions/api/link.js',
 ];

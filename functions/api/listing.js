@@ -1,6 +1,6 @@
 import {
   TABLES,
-  getRecord,
+  getRecordOrNull,
   updateRecord,
   deleteRecord,
   isPostOwner,
@@ -36,7 +36,7 @@ export async function onRequestGet({ request, env }) {
   const id = listingId(request);
   if (!id) return badRequest('id is required');
   try {
-    const record = await getRecord(env, TABLES.posts, id);
+    const record = await getRecordOrNull(env, TABLES.posts, id);
     if (!record) return json({ ok: false, message: 'Not found' }, { status: 404 });
 
     // Tell the client whether it may edit — the server still enforces this on

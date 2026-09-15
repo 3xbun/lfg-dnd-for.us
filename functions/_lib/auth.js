@@ -101,9 +101,35 @@ export function readState(request) {
 
 /* ---- Discord ---- */
 
+/**
+ * The redirect URI must be IDENTICAL in three places: this env var, the Discord
+ * portal's OAuth2 redirect list, and the route that actually exists
+ * (`functions/api/auth/callback.js` -> `/api/auth/callback`).
+ *
+ * A mismatch does not error visibly: Discord redirects the browser to a path
+ * with no function behind it, the SPA fallback serves index.html, and login
+ * silently does nothing. So a stale env value is reported loudly instead.
+ */
+export const CALLBACK_PATH = '/api/auth/callback';
+
 export function redirectUri(env, request) {
-  if (env.DISCORD_REDIRECT_URI) return env.DISCORD_REDIRECT_URI;
-  return `${new URL(request.url).origin}/api/auth/discord/callback`;
+  const origin = new URL(request.url).origin;
+  const fallback = `${origin}${CALLBACK_PATH}`;
+  if (!env.DISCORD_REDIRECT_URI) return fallback;
+  try {
+    const configured = new URL(env.DISCORD_REDIRECT_URI);
+    if (configured.pathname !== CALLBACK_PATH) {
+      throw new Error(
+        `DISCORD_REDIRECT_URI path is "${configured.pathname}" but the callback ` +
+          `route is "${CALLBACK_PATH}". Update the env var (and the Discord portal) ` +
+          `or sign-in will redirect to a dead route.`
+      );
+    }
+    return configured.toString();
+  } catch (err) {
+    if (err.message.startsWith('DISCORD_REDIRECT_URI path is')) throw err;
+    throw new Error(`DISCORD_REDIRECT_URI is not a valid URL: ${env.DISCORD_REDIRECT_URI}`);
+  }
 }
 
 export function authorizeUrl(env, request, state) {

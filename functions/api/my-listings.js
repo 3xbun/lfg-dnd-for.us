@@ -42,7 +42,7 @@ export async function onRequestGet({ request, env }) {
       listingIdPerJoin.filter((id) => id != null)
     );
 
-    return json({ ok: true, mine, joined });
+    return json({ ok: true, mine, joined }, { headers: { 'Cache-Control': 'private, no-store' } });
   } catch (err) {
     return json({ ok: false, message: err.message }, { status: 502 });
   }

@@ -1,4 +1,4 @@
-import { TABLES, getRecord, updateRecord } from '../_lib/noco.js';
+import { TABLES, getRecordOrNull, updateRecord } from '../_lib/noco.js';
 import { assertOwner } from './listing.js';
 import { getSession, json, unauthorized, badRequest, methodNotAllowed } from '../_lib/auth.js';
 import { validateLinkFields } from '../_lib/validate.js';
@@ -27,7 +27,7 @@ export async function onRequestPost({ request, env }) {
   if (!listingId) return badRequest('listingId is required');
 
   try {
-    const listing = await getRecord(env, TABLES.posts, listingId);
+    const listing = await getRecordOrNull(env, TABLES.posts, listingId);
     if (!listing) return json({ ok: false, message: 'Listing not found' }, { status: 404 });
 
     const gate = await assertOwner(env, listingId, session);

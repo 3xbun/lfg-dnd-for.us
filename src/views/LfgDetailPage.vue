@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -28,6 +30,15 @@ const linking = ref(false)
 const linkError = ref('')
 const linkSaved = ref(false)
 
+const notFound = ref(false)
+const options = ref({})
+const reportOpen = ref(false)
+const reportReason = ref('')
+const reportDetail = ref('')
+const reporting = ref(false)
+const reportDone = ref(false)
+const reportError = ref('')
+
 const statusVariant = { Open: 'default', Full: 'secondary', Closed: 'destructive' }
 
 async function loadPost() {
@@ -41,9 +52,48 @@ async function loadPost() {
       discord_server_id: record.discord_server_id || '',
     }
   } catch (err) {
-    console.error('Failed to load post', err)
+    if (err?.response?.status === 404) notFound.value = true
+    else console.error('Failed to load post', err)
   } finally {
     loading.value = false
+  }
+}
+
+async function openReport() {
+  reportOpen.value = true
+  reportDone.value = false
+  reportError.value = ''
+  if (!Object.keys(options.value).length) {
+    try {
+      options.value = await api.getOptions()
+    } catch (err) {
+      console.error('Failed to load report reasons', err)
+    }
+  }
+}
+
+async function submitReport() {
+  if (!isLoggedIn()) {
+    const user = await load()
+    if (!user) return loginWithDiscord()
+  }
+  if (!reportReason.value) {
+    reportError.value = t('report.pickReason')
+    return
+  }
+  reporting.value = true
+  reportError.value = ''
+  try {
+    await api.reportListing({
+      listingId: route.params.id,
+      reason: reportReason.value,
+      detail: reportDetail.value,
+    })
+    reportDone.value = true
+  } catch (err) {
+    reportError.value = err?.response?.data?.message || t('common.error')
+  } finally {
+    reporting.value = false
   }
 }
 
@@ -108,6 +158,14 @@ onMounted(loadPost)
   <div class="mx-auto max-w-7xl px-6 py-8">
     <div v-if="loading" class="text-center text-muted-foreground py-12">{{ t('common.loading') }}</div>
 
+    <Card v-else-if="notFound" class="mx-auto max-w-md">
+      <CardContent class="py-10 text-center">
+        <p class="text-lg font-medium mb-1">{{ t('lfg.notFoundTitle') }}</p>
+        <p class="text-sm text-muted-foreground mb-5">{{ t('lfg.notFoundBody') }}</p>
+        <Button size="sm" @click="router.push('/')">{{ t('lfg.browseGroups') }}</Button>
+      </CardContent>
+    </Card>
+
     <template v-else-if="post">
       <div class="mb-6 flex items-center justify-between gap-3">
         <Button variant="outline" size="sm" @click="router.back()">{{ t('common.back') }}</Button>
@@ -120,6 +178,60 @@ onMounted(loadPost)
             {{ t('lfg.delete') }}
           </Button>
         </div>
+
+        <!-- everyone but the owner can flag a listing -->
+        <Button v-else variant="ghost" size="sm" class="text-muted-foreground" @click="openReport">
+          {{ t('report.cta') }}
+        </Button>
+      </div>
+
+      <!-- report dialog -->
+      <div
+        v-if="reportOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        @click.self="reportOpen = false"
+      >
+        <Card class="w-full max-w-md">
+          <CardHeader class="pb-3">
+            <CardTitle class="text-base">{{ t('report.title') }}</CardTitle>
+          </CardHeader>
+          <CardContent class="flex flex-col gap-3">
+            <template v-if="!reportDone">
+              <p class="text-sm text-muted-foreground">{{ t('report.blurb') }}</p>
+
+              <div class="flex flex-col gap-1.5">
+                <Label class="text-xs">{{ t('report.reason') }}</Label>
+                <Select v-model="reportReason">
+                  <SelectTrigger :placeholder="t('report.pickReason')" />
+                  <SelectContent>
+                    <SelectItem v-for="r in options.report_reason || []" :key="r" :value="r">{{ r }}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <Label class="text-xs">{{ t('report.detail') }}</Label>
+                <Textarea v-model="reportDetail" rows="3" :placeholder="t('report.detailPlaceholder')" />
+              </div>
+
+              <p v-if="reportError" class="text-sm text-destructive">{{ reportError }}</p>
+
+              <div class="flex justify-end gap-2">
+                <Button variant="outline" size="sm" @click="reportOpen = false">{{ t('lfg.cancel') }}</Button>
+                <Button size="sm" :disabled="reporting" @click="submitReport">
+                  {{ reporting ? t('common.loading') : t('report.submit') }}
+                </Button>
+              </div>
+            </template>
+
+            <template v-else>
+              <p class="text-sm text-green-500">{{ t('report.thanks') }}</p>
+              <div class="flex justify-end">
+                <Button size="sm" @click="reportOpen = false">{{ t('report.close') }}</Button>
+              </div>
+            </template>
+          </CardContent>
+        </Card>
       </div>
 
       <div class="grid grid-cols-[1fr_340px] gap-6 items-start max-lg:grid-cols-1">

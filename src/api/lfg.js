@@ -51,6 +51,12 @@ export async function joinListing(listingId) {
   return data
 }
 
+/** Report a listing. Auth required; one report per user per listing. */
+export async function reportListing(payload) {
+  const { data } = await api.post('/api/report', payload)
+  return data
+}
+
 export async function linkListing(payload) {
   const { data } = await api.post('/api/link', payload)
   return data.record

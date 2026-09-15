@@ -7,6 +7,7 @@ export const TABLES = {
   posts: 'mxt7apjiai6mo6f', // LFG_Posts
   users: 'm0ksx7a3h6okl1r', // LFG_Users
   joins: 'mc7u0uiyy7fz3om', // LFG_Joins
+  reports: 'm9o27o851nj8saz', // LFG_Reports
 };
 
 /**
@@ -23,7 +24,19 @@ export const LINKS = {
   // `where` CANNOT filter on a relation column (it returns nothing, silently).
   userPosts: 'cn5rk0km2nrma01', // LFG_Users.LFG_Post  -> LFG_Posts
   userJoins: 'chkfv7lvmsq5j96', // LFG_Users.LFG_Join  -> LFG_Joins
+  reportListing: 'c02vz9bh77y47bm', // LFG_Reports.listing  -> LFG_Posts
+  reportReporter: 'crtyqtld6dztnlz', // LFG_Reports.reporter -> LFG_Users
+  userReports: 'czdsgwjvoam19e4', // LFG_Users.LFG_Report -> LFG_Reports
 };
+
+/** LFG_Reports.reason SingleSelect choices (kept in step with the DB column). */
+export const REPORT_REASONS = [
+  'Spam',
+  'Harassment',
+  'Wrong information',
+  'Inappropriate content',
+  'Other',
+];
 
 function cfg(env) {
   const url = env.NDB_URL || 'https://ndb.3xbun.com';
@@ -111,6 +124,20 @@ export async function listAll(env, table, opts = {}) {
 
 export async function getRecord(env, table, id) {
   return flatten(await nc(env, `data/${cfg(env).base}/${table}/records/${id}`));
+}
+
+/**
+ * Like getRecord but returns null when the row does not exist.
+ * `getRecord` THROWS on a NocoDB 404, so a plain existence check built on it
+ * turns "not found" into a 502 with a raw upstream error in the response.
+ */
+export async function getRecordOrNull(env, table, id) {
+  try {
+    return await getRecord(env, table, id);
+  } catch (err) {
+    if (err.status === 404) return null;
+    throw err;
+  }
 }
 
 export async function createRecord(env, table, fields) {

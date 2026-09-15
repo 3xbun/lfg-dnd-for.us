@@ -51,6 +51,9 @@
     "discordServerId": "Discord server ID",
     "saveLinks": "Save links",
     "linksSaved": "Links saved.",
+    "notFoundTitle": "Listing not found",
+    "notFoundBody": "It may have been closed or removed by its owner.",
+    "browseGroups": "Browse groups",
     "seats": "Seats",
     "schedule": "Schedule",
     "dayOfWeek": "Day",
@@ -66,6 +69,18 @@
     "signingIn": "Signing in with Discord...",
     "denied": "You cancelled the Discord sign-in.",
     "error": "Sign-in failed. Please try again."
+  },
+  "report": {
+    "cta": "Report",
+    "title": "Report this listing",
+    "blurb": "Tell us what is wrong. Reports are private and reviewed by moderators.",
+    "reason": "Reason",
+    "pickReason": "Choose a reason",
+    "detail": "Details (optional)",
+    "detailPlaceholder": "Anything else we should know?",
+    "submit": "Submit report",
+    "thanks": "Thanks — your report has been recorded.",
+    "close": "Close"
   },
   "my": {
     "title": "My Groups",
