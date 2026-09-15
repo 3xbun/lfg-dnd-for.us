@@ -5,19 +5,19 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --brand: oklch(0.97 0.001 106.424);
-  --brand-hover: #c73652;
-  --brand-bg: rgba(233, 69, 96, 0.15);
+  --brand: #9f1404;
+  --brand-hover: #7a1003;
+  --brand-bg: rgba(159, 20, 4, 0.1);
 
-  --bg: #0f0f1a;
-  --header-bg: #1a1a2e;
-  --card-bg: #1e1e2e;
-  --input-bg: #12121c;
-  --hover-bg: rgba(255, 255, 255, 0.05);
+  --bg: #f3f3f3;
+  --header-bg: #ffffff;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --hover-bg: rgba(0, 0, 0, 0.05);
 
-  --text: #e0e0e0;
-  --text-secondary: #999;
-  --border: oklch(1 0 0 / 10%);
+  --text: #1a1a1a;
+  --text-secondary: #666666;
+  --border: rgba(0, 0, 0, 0.1);
 
   --sans: 'Noto Sans Thai', sans-serif;
 
@@ -36,18 +36,52 @@
   --card-foreground: var(--text);
   --popover: var(--card-bg);
   --popover-foreground: var(--text);
-  --primary: oklch(0.795 0.184 86.047);
-  --primary-foreground: #fff;
-  --secondary: #2a2a3e;
-  --secondary-foreground: #e0e0e0;
-  --muted: #2a2a3e;
-  --muted-foreground: #999;
-  --accent: #2a2a3e;
-  --accent-foreground: #e0e0e0;
-  --destructive: oklch(0.704 0.191 22.216);
+  --primary: #9f1404;
+  --primary-foreground: #ffffff;
+  --secondary: #f4821d;
+  --secondary-foreground: #ffffff;
+  --muted: #e5e5e5;
+  --muted-foreground: #666666;
+  --accent: #ecbe27;
+  --accent-foreground: #1a1a1a;
+  --destructive: #dc2626;
   --input: var(--input-bg);
-  --ring: oklch(0.709 0.01 56.259);
+  --ring: #9f1404;
   --radius: 0.875rem;
+}
+
+.dark {
+  --brand: #9f1404;
+  --brand-hover: #c41a06;
+  --brand-bg: rgba(159, 20, 4, 0.2);
+
+  --bg: #0a0a0a;
+  --header-bg: #141414;
+  --card-bg: #1a1a1a;
+  --input-bg: #141414;
+  --hover-bg: rgba(255, 255, 255, 0.05);
+
+  --text: #f0f0f0;
+  --text-secondary: #999999;
+  --border: rgba(255, 255, 255, 0.1);
+
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--card-bg);
+  --card-foreground: var(--text);
+  --popover: var(--card-bg);
+  --popover-foreground: var(--text);
+  --primary: #9f1404;
+  --primary-foreground: #ffffff;
+  --secondary: #f4821d;
+  --secondary-foreground: #ffffff;
+  --muted: #262626;
+  --muted-foreground: #999999;
+  --accent: #ecbe27;
+  --accent-foreground: #1a1a1a;
+  --destructive: #ef4444;
+  --input: var(--input-bg);
+  --ring: #9f1404;
 }
 
 body {
