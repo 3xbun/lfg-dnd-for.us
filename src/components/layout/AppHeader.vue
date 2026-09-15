@@ -36,6 +36,9 @@ function avatarUrl() {
         <router-link to="/">
           <Button variant="ghost" size="sm">{{ t('nav.home') }}</Button>
         </router-link>
+        <router-link v-if="isLoggedIn()" to="/my">
+          <Button variant="ghost" size="sm">{{ t('nav.myGroups') }}</Button>
+        </router-link>
         <router-link v-if="isLoggedIn()" to="/lfg/create">
           <Button variant="outline" size="sm" class="border-brand text-brand hover:bg-brand hover:text-white">
             {{ t('nav.createPost') }}

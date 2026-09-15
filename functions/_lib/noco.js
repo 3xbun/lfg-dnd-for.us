@@ -19,6 +19,10 @@ export const LINKS = {
   postOwner: 'cgv3ed56a5ctw7i', // LFG_Posts.owner      -> LFG_Users
   joinListing: 'cc4yhg7auw8pneh', // LFG_Joins.listing  -> LFG_Posts
   joinPlayer: 'ca04pfnpdlqtcic', // LFG_Joins.player    -> LFG_Users
+  // back-references on LFG_Users — the reliable way to list "my" rows, since
+  // `where` CANNOT filter on a relation column (it returns nothing, silently).
+  userPosts: 'cn5rk0km2nrma01', // LFG_Users.LFG_Post  -> LFG_Posts
+  userJoins: 'chkfv7lvmsq5j96', // LFG_Users.LFG_Join  -> LFG_Joins
 };
 
 function cfg(env) {
@@ -188,6 +192,14 @@ export async function findUserByDiscordId(env, discordId) {
     pageSize: 1,
   });
   return records[0] || null;
+}
+
+/** Fetch records by id in parallel, dropping any that vanished. */
+export async function getRecordsByIds(env, table, ids) {
+  const out = await Promise.all(
+    ids.map((id) => getRecord(env, table, id).catch(() => null))
+  );
+  return out.filter(Boolean);
 }
 
 /** True when `discordId` owns the given LFG_Posts row. */

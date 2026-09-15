@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "createPost": "Create LFG Post",
+    "myGroups": "My Groups",
     "logout": "Logout"
   },
   "home": {
@@ -44,6 +45,12 @@
     "applyMessage": "Join to get the invite link and appear on the player list.",
     "applySend": "Send Application",
     "signInToJoin": "Sign in with Discord to join",
+    "attachLinks": "Attach links",
+    "facebookUrl": "Facebook post URL",
+    "discordInvite": "Discord invite URL",
+    "discordServerId": "Discord server ID",
+    "saveLinks": "Save links",
+    "linksSaved": "Links saved.",
     "seats": "Seats",
     "schedule": "Schedule",
     "dayOfWeek": "Day",
@@ -59,6 +66,13 @@
     "signingIn": "Signing in with Discord...",
     "denied": "You cancelled the Discord sign-in.",
     "error": "Sign-in failed. Please try again."
+  },
+  "my": {
+    "title": "My Groups",
+    "mine": "Listings I own",
+    "joined": "Listings I joined",
+    "noMine": "You have not posted a group yet.",
+    "noJoined": "You have not joined any group yet."
   },
   "profile": {
     "title": "Profile",

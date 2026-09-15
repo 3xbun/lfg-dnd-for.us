@@ -20,6 +20,17 @@ export async function getListing(id) {
   return data.record
 }
 
+/** Like getListing but also reports whether the caller may edit it. */
+export async function getListingWithPermission(id) {
+  const { data } = await api.get('/api/listing', { params: { id } })
+  return { record: data.record, isOwner: !!data.isOwner }
+}
+
+export async function getMyListings() {
+  const { data } = await api.get('/api/my-listings')
+  return data
+}
+
 export async function createListing(record) {
   const { data } = await api.post('/api/listings', record)
   return data.record

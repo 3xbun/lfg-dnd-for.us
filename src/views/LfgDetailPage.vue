@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as api from '../api/lfg.js'
@@ -7,7 +7,7 @@ import { useAuth } from '../stores/auth.js'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 const { t } = useI18n()
@@ -16,16 +16,30 @@ const router = useRouter()
 const { isLoggedIn, load, loginWithDiscord } = useAuth()
 
 const post = ref(null)
+const isOwner = ref(false)
 const loading = ref(true)
 const joining = ref(false)
 const joinSuccess = ref(false)
 const joinError = ref('')
+const deleting = ref(false)
+
+const links = ref({ facebook_url: '', discord_invite_url: '', discord_server_id: '' })
+const linking = ref(false)
+const linkError = ref('')
+const linkSaved = ref(false)
 
 const statusVariant = { Open: 'default', Full: 'secondary', Closed: 'destructive' }
 
 async function loadPost() {
   try {
-    post.value = await api.getListing(route.params.id)
+    const { record, isOwner: owner } = await api.getListingWithPermission(route.params.id)
+    post.value = record
+    isOwner.value = owner
+    links.value = {
+      facebook_url: record.facebook_url || '',
+      discord_invite_url: record.discord_invite_url || '',
+      discord_server_id: record.discord_server_id || '',
+    }
   } catch (err) {
     console.error('Failed to load post', err)
   } finally {
@@ -48,9 +62,42 @@ async function handleJoin() {
     joinSuccess.value = true
     await loadPost()
   } catch (err) {
-    joinError.value = err?.response?.data?.message || 'Join failed'
+    joinError.value = err?.response?.data?.message || t('common.error')
   } finally {
     joining.value = false
+  }
+}
+
+async function handleSaveLinks() {
+  linking.value = true
+  linkError.value = ''
+  linkSaved.value = false
+  try {
+    // '' clears a link; the server validates the host before storing it
+    await api.linkListing({
+      listingId: route.params.id,
+      facebook_url: links.value.facebook_url || null,
+      discord_invite_url: links.value.discord_invite_url || null,
+      discord_server_id: links.value.discord_server_id || null,
+    })
+    linkSaved.value = true
+    await loadPost()
+  } catch (err) {
+    linkError.value = err?.response?.data?.message || t('common.error')
+  } finally {
+    linking.value = false
+  }
+}
+
+async function handleDelete() {
+  if (!window.confirm(t('lfg.confirmDelete'))) return
+  deleting.value = true
+  try {
+    await api.deleteListing(route.params.id)
+    router.push('/my')
+  } catch (err) {
+    console.error('Failed to delete', err)
+    deleting.value = false
   }
 }
 
@@ -62,7 +109,18 @@ onMounted(loadPost)
     <div v-if="loading" class="text-center text-muted-foreground py-12">{{ t('common.loading') }}</div>
 
     <template v-else-if="post">
-      <Button variant="outline" size="sm" class="mb-6" @click="router.back()">{{ t('common.back') }}</Button>
+      <div class="mb-6 flex items-center justify-between gap-3">
+        <Button variant="outline" size="sm" @click="router.back()">{{ t('common.back') }}</Button>
+
+        <div v-if="isOwner" class="flex items-center gap-2">
+          <Button variant="outline" size="sm" @click="router.push(`/lfg/${post.Id}/edit`)">
+            {{ t('lfg.edit') }}
+          </Button>
+          <Button variant="destructive" size="sm" :disabled="deleting" @click="handleDelete">
+            {{ t('lfg.delete') }}
+          </Button>
+        </div>
+      </div>
 
       <div class="grid grid-cols-[1fr_340px] gap-6 items-start max-lg:grid-cols-1">
         <Card>
@@ -130,7 +188,35 @@ onMounted(loadPost)
             </CardContent>
           </Card>
 
-          <Card v-if="post.status === 'Open'">
+          <!-- owner: attach the Facebook post / Discord server -->
+          <Card v-if="isOwner">
+            <CardHeader class="pb-3">
+              <CardTitle class="text-sm">{{ t('lfg.attachLinks') }}</CardTitle>
+            </CardHeader>
+            <CardContent class="flex flex-col gap-3">
+              <div class="flex flex-col gap-1.5">
+                <Label class="text-xs">{{ t('lfg.facebookUrl') }}</Label>
+                <Input v-model="links.facebook_url" placeholder="https://www.facebook.com/..." />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label class="text-xs">{{ t('lfg.discordInvite') }}</Label>
+                <Input v-model="links.discord_invite_url" placeholder="https://discord.gg/..." />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label class="text-xs">{{ t('lfg.discordServerId') }}</Label>
+                <Input v-model="links.discord_server_id" placeholder="123456789012345678" />
+              </div>
+
+              <p v-if="linkError" class="text-sm text-destructive">{{ linkError }}</p>
+              <p v-if="linkSaved" class="text-sm text-green-500">{{ t('lfg.linksSaved') }}</p>
+
+              <Button size="sm" :disabled="linking" @click="handleSaveLinks">
+                {{ linking ? t('common.loading') : t('lfg.saveLinks') }}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card v-if="post.status === 'Open' && !isOwner">
             <CardHeader class="pb-3">
               <CardTitle class="text-sm">{{ t('lfg.join') }}</CardTitle>
             </CardHeader>

@@ -25,6 +25,12 @@ const routes = [
     component: () => import('../views/LfgDetailPage.vue'),
   },
   {
+    path: '/my',
+    name: 'MyGroups',
+    component: () => import('../views/MyGroupsPage.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/auth/callback',
     name: 'AuthCallback',
     component: () => import('../views/AuthCallback.vue'),

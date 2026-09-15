@@ -38,7 +38,19 @@ export async function onRequestGet({ request, env }) {
   try {
     const record = await getRecord(env, TABLES.posts, id);
     if (!record) return json({ ok: false, message: 'Not found' }, { status: 404 });
-    return json({ ok: true, record }, { headers: { 'Cache-Control': 'public, max-age=15' } });
+
+    // Tell the client whether it may edit — the server still enforces this on
+    // PATCH/DELETE, this only drives which controls the UI shows.
+    let isOwner = false;
+    const session = await getSession(env, request);
+    if (session) isOwner = await isPostOwner(env, id, session.uid);
+
+    // A public read must not be cached as owner-specific.
+    const headers = session
+      ? { 'Cache-Control': 'private, no-store' }
+      : { 'Cache-Control': 'public, max-age=15' };
+
+    return json({ ok: true, record, isOwner }, { headers });
   } catch (err) {
     return json({ ok: false, message: err.message }, { status: 502 });
   }
