@@ -20,6 +20,7 @@ const files = [
   'functions/api/auth/logout.js',
   'functions/api/listings.js',
   'functions/api/listing.js',
+  'functions/api/options.js',
   'functions/api/join.js',
   'functions/api/link.js',
 ];

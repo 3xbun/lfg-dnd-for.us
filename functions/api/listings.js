@@ -35,8 +35,24 @@ function pickWritable(body = {}) {
   return out;
 }
 
+/**
+ * Escapes a value for a NocoDB `where` tuple.
+ *
+ * NocoDB's parser splits a tuple on commas, so a value that legitimately
+ * contains one — `Dungeons & Dragons 5e, 5.5e` is a real option in this DB —
+ * silently fails to parse or matches nothing. Wrapping the value in DOUBLE
+ * quotes is the fix; it was verified to work for plain values, `like`
+ * wildcards, and `~and`/`~or` joins alike. Never strip commas.
+ *
+ * Quotes and newlines are removed from user input so it cannot break out of
+ * the tuple.
+ */
 function esc(v) {
-  return String(v).replace(/[(),]/g, ' ').trim();
+  const clean = String(v)
+    .replace(/[\r\n\t]/g, ' ')
+    .replace(/"/g, '')
+    .trim();
+  return `"${clean}"`;
 }
 
 function buildWhere(url) {
@@ -47,7 +63,9 @@ function buildWhere(url) {
     if (v) parts.push(`(${field},eq,${esc(v)})`);
   }
   const search = q.get('search');
-  if (search) parts.push(`(title,like,%${esc(search)}%)`);
+  // The % wildcards must sit INSIDE the quotes — `(title,like,%"x"%)` is a
+  // syntax error, `(title,like,"%x%")` is what NocoDB accepts.
+  if (search) parts.push(`(title,like,${esc(`%${search}%`)})`);
   return parts.join('~and');
 }
 

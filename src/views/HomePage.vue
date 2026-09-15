@@ -11,7 +11,7 @@ const { t } = useI18n()
 const posts = ref([])
 const loading = ref(true)
 const searchQuery = ref('')
-const filters = ref({ gameSystem: null, playStyle: null, status: null })
+const filters = ref({ gameSystem: null, playStyle: null, status: null, dayOfWeek: null })
 
 async function loadPosts() {
   loading.value = true
@@ -22,6 +22,7 @@ async function loadPosts() {
     if (filters.value.gameSystem) params.game_system = filters.value.gameSystem
     if (filters.value.playStyle) params.play_style = filters.value.playStyle
     if (filters.value.status) params.status = filters.value.status
+    if (filters.value.dayOfWeek) params.day_of_week = filters.value.dayOfWeek
     if (searchQuery.value) params.search = searchQuery.value
 
     const result = await api.listListings(params)

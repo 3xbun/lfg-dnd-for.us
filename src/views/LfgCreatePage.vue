@@ -20,21 +20,21 @@ const isEdit = ref(false)
 const loading = ref(false)
 const saving = ref(false)
 const error = ref('')
+const options = ref({})
 
 const form = ref({
   title: '',
-  game_system: 'D&D 5e',
+  game_system: '',
   description: '',
-  play_style: 'Online',
+  play_style: '',
   location: '',
   status: 'Open',
+  seats_total: null,
+  seats_open: null,
+  day_of_week: '',
+  start_time: '',
+  timezone: 'Asia/Bangkok',
 })
-
-const gameSystems = [
-  'D&D 5e', 'Pathfinder 2e', 'Call of Cthulhu', 'FATE',
-  'World of Darkness', 'Shadowrun', 'Blades in the Dark',
-  'Dungeon World', 'Cyberpunk RED', 'Other',
-]
 
 async function loadPost() {
   if (!route.params.id) return
@@ -44,14 +44,19 @@ async function loadPost() {
     const post = await api.getListing(route.params.id)
     form.value = {
       title: post.title || '',
-      game_system: post.game_system || 'D&D 5e',
+      game_system: post.game_system || '',
       description: post.description || '',
-      play_style: post.play_style || 'Online',
+      play_style: post.play_style || '',
       location: post.location || '',
       status: post.status || 'Open',
+      seats_total: post.seats_total ?? null,
+      seats_open: post.seats_open ?? null,
+      day_of_week: post.day_of_week || '',
+      start_time: (post.start_time || '').slice(0, 5),
+      timezone: post.timezone || 'Asia/Bangkok',
     }
   } catch (err) {
-    console.error('Failed to load post', err)
+    error.value = err?.response?.data?.message || 'Failed to load listing'
   } finally {
     loading.value = false
   }
@@ -59,8 +64,14 @@ async function loadPost() {
 
 async function handleSubmit() {
   saving.value = true
+  error.value = ''
   try {
-    const record = { ...form.value }
+    // send null rather than '' so NocoDB clears the column instead of
+    // rejecting or storing an empty SingleSelect value
+    const record = {}
+    for (const [k, v] of Object.entries(form.value)) record[k] = v === '' ? null : v
+    record.status = form.value.status || 'Open'
+
     if (isEdit.value) {
       await api.updateListing(route.params.id, record)
       router.push(`/lfg/${route.params.id}`)
@@ -69,7 +80,6 @@ async function handleSubmit() {
       router.push(`/lfg/${result.Id}`)
     }
   } catch (err) {
-    console.error('Failed to save post', err)
     error.value = err?.response?.data?.message || 'Save failed'
   } finally {
     saving.value = false
@@ -82,6 +92,11 @@ onMounted(async () => {
   if (!user) {
     loginWithDiscord()
     return
+  }
+  try {
+    options.value = await api.getOptions()
+  } catch (err) {
+    console.error('Failed to load options', err)
   }
   loadPost()
 })
@@ -99,6 +114,8 @@ onMounted(async () => {
         <div v-if="loading" class="text-center text-muted-foreground py-8">{{ t('common.loading') }}</div>
 
         <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-4">
+          <p v-if="error" class="text-sm text-destructive">{{ error }}</p>
+
           <div class="flex flex-col gap-1.5">
             <Label>{{ t('lfg.title') }} *</Label>
             <Input v-model="form.title" :placeholder="t('lfg.titlePlaceholder')" required />
@@ -108,9 +125,9 @@ onMounted(async () => {
             <div class="flex flex-col gap-1.5">
               <Label>{{ t('lfg.gameSystem') }} *</Label>
               <Select v-model="form.game_system">
-                <SelectTrigger />
+                <SelectTrigger :placeholder="t('lfg.gameSystem')" />
                 <SelectContent>
-                  <SelectItem v-for="sys in gameSystems" :key="sys" :value="sys">{{ sys }}</SelectItem>
+                  <SelectItem v-for="v in options.game_system || []" :key="v" :value="v">{{ v }}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -118,11 +135,11 @@ onMounted(async () => {
             <div class="flex flex-col gap-1.5">
               <Label>{{ t('lfg.playStyle') }} *</Label>
               <Select v-model="form.play_style">
-                <SelectTrigger />
+                <SelectTrigger :placeholder="t('lfg.playStyle')" />
                 <SelectContent>
-                  <SelectItem value="Online">{{ t('lfg.online') }}</SelectItem>
-                  <SelectItem value="Offline">{{ t('lfg.offline') }}</SelectItem>
-                  <SelectItem value="Hybrid">{{ t('lfg.hybrid') }}</SelectItem>
+                  <SelectItem v-for="v in options.play_style || []" :key="v" :value="v">
+                    {{ t('lfg.' + v.toLowerCase()) }}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -133,21 +150,61 @@ onMounted(async () => {
             <Textarea v-model="form.description" :placeholder="t('lfg.descriptionPlaceholder')" rows="5" required />
           </div>
 
-          <div class="flex flex-col gap-1.5">
-            <Label>{{ t('lfg.location') }}</Label>
-            <Input v-model="form.location" :placeholder="t('lfg.locationPlaceholder')" />
+          <div class="grid grid-cols-2 gap-4 max-md:grid-cols-1">
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.location') }}</Label>
+              <Select v-model="form.location">
+                <SelectTrigger :placeholder="t('lfg.location')" />
+                <SelectContent>
+                  <SelectItem v-for="v in options.location || []" :key="v" :value="v">{{ v }}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.status') }}</Label>
+              <Select v-model="form.status">
+                <SelectTrigger :placeholder="t('lfg.open')" />
+                <SelectContent>
+                  <SelectItem v-for="v in options.status || []" :key="v" :value="v">
+                    {{ t('lfg.' + v.toLowerCase()) }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          <div class="flex flex-col gap-1.5">
-            <Label>{{ t('lfg.status') }}</Label>
-            <Select v-model="form.status">
-              <SelectTrigger />
-              <SelectContent>
-                <SelectItem value="Open">{{ t('lfg.open') }}</SelectItem>
-                <SelectItem value="Full">{{ t('lfg.full') }}</SelectItem>
-                <SelectItem value="Closed">{{ t('lfg.closed') }}</SelectItem>
-              </SelectContent>
-            </Select>
+          <div class="grid grid-cols-3 gap-4 max-md:grid-cols-1">
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.dayOfWeek') }}</Label>
+              <Select v-model="form.day_of_week">
+                <SelectTrigger :placeholder="t('lfg.dayOfWeek')" />
+                <SelectContent>
+                  <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ v }}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.startTime') }}</Label>
+              <Input v-model="form.start_time" type="time" />
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.timezone') }}</Label>
+              <Input v-model="form.timezone" placeholder="Asia/Bangkok" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 max-md:grid-cols-1">
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.seatsTotal') }}</Label>
+              <Input v-model.number="form.seats_total" type="number" min="1" max="20" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.seatsOpen') }}</Label>
+              <Input v-model.number="form.seats_open" type="number" min="0" max="20" />
+            </div>
           </div>
 
           <div class="flex justify-end gap-2 pt-2">

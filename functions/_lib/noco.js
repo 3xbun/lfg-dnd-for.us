@@ -166,6 +166,16 @@ export async function removeLink(env, table, linkField, id, targetIds) {
   });
 }
 
+/** Table field metadata (v3 meta API) — source of truth for SingleSelect choices. */
+export async function getTableFields(env, table) {
+  const data = await nc(env, `meta/bases/${cfg(env).base}/tables/${table}`);
+  return (data?.fields || []).map((f) => ({
+    title: f.title,
+    type: f.type,
+    choices: (f.options?.choices || []).map((c) => c.title),
+  }));
+}
+
 /**
  * Resolve the LFG_Users row for a Discord id.
  * NOTE: the links endpoint returns only a PARTIAL projection of the related

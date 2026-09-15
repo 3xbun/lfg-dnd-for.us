@@ -45,6 +45,12 @@ export async function linkListing(payload) {
   return data.record
 }
 
+/** SingleSelect choice lists, read from the DB so the UI can't drift from it. */
+export async function getOptions() {
+  const { data } = await api.get('/api/options')
+  return data.options || {}
+}
+
 export async function me() {
   try {
     const { data } = await api.get('/api/auth/me')

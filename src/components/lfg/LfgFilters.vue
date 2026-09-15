@@ -1,22 +1,39 @@
 <script setup>
+import { onMounted, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
+import { getOptions } from '@/api/lfg.js'
 
 const { t } = useI18n()
 
-defineProps({
+const props = defineProps({
   modelValue: { type: Object, required: true },
 })
 
-defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
-const gameSystems = [
-  'D&D 5e', 'Pathfinder 2e', 'Call of Cthulhu', 'FATE',
-  'World of Darkness', 'Shadowrun', 'Blades in the Dark',
-  'Dungeon World', 'Cyberpunk RED', 'Other',
-]
+/**
+ * Choice lists come from /api/options (read from the NocoDB column metadata),
+ * never a hardcoded array — a stale list offered systems the column does not
+ * accept, so those filters silently returned nothing.
+ */
+const options = ref({})
+const ALL = computed(() => t('home.all'))
+
+onMounted(async () => {
+  try {
+    options.value = await getOptions()
+  } catch (err) {
+    console.error('Failed to load filter options', err)
+  }
+})
+
+function set(key, value) {
+  // an empty value clears the filter rather than filtering on ''
+  emit('update:modelValue', { ...props.modelValue, [key]: value || null })
+}
 </script>
 
 <template>
@@ -27,43 +44,50 @@ const gameSystems = [
     <CardContent class="flex flex-col gap-4">
       <div class="flex flex-col gap-1.5">
         <Label class="text-xs text-muted-foreground">{{ t('home.gameSystem') }}</Label>
-        <Select
-          :model-value="modelValue.gameSystem"
-          @update:model-value="$emit('update:modelValue', { ...modelValue, gameSystem: $event })"
-        >
-          <SelectTrigger class="h-8 text-xs" :placeholder="t('home.all')" />
+        <Select :model-value="modelValue.gameSystem" @update:model-value="set('gameSystem', $event)">
+          <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
           <SelectContent>
-            <SelectItem v-for="sys in gameSystems" :key="sys" :value="sys">{{ sys }}</SelectItem>
+            <SelectItem value="">{{ ALL }}</SelectItem>
+            <SelectItem v-for="sys in options.game_system || []" :key="sys" :value="sys">
+              {{ sys }}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div class="flex flex-col gap-1.5">
         <Label class="text-xs text-muted-foreground">{{ t('home.playStyle') }}</Label>
-        <Select
-          :model-value="modelValue.playStyle"
-          @update:model-value="$emit('update:modelValue', { ...modelValue, playStyle: $event })"
-        >
-          <SelectTrigger class="h-8 text-xs" :placeholder="t('home.all')" />
+        <Select :model-value="modelValue.playStyle" @update:model-value="set('playStyle', $event)">
+          <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
           <SelectContent>
-            <SelectItem value="Online">{{ t('lfg.online') }}</SelectItem>
-            <SelectItem value="Offline">{{ t('lfg.offline') }}</SelectItem>
-            <SelectItem value="Hybrid">{{ t('lfg.hybrid') }}</SelectItem>
+            <SelectItem value="">{{ ALL }}</SelectItem>
+            <SelectItem v-for="v in options.play_style || []" :key="v" :value="v">
+              {{ t('lfg.' + v.toLowerCase()) }}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div class="flex flex-col gap-1.5">
         <Label class="text-xs text-muted-foreground">{{ t('home.status') }}</Label>
-        <Select
-          :model-value="modelValue.status"
-          @update:model-value="$emit('update:modelValue', { ...modelValue, status: $event })"
-        >
-          <SelectTrigger class="h-8 text-xs" :placeholder="t('home.all')" />
+        <Select :model-value="modelValue.status" @update:model-value="set('status', $event)">
+          <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
           <SelectContent>
-            <SelectItem value="Open">{{ t('lfg.open') }}</SelectItem>
-            <SelectItem value="Full">{{ t('lfg.full') }}</SelectItem>
-            <SelectItem value="Closed">{{ t('lfg.closed') }}</SelectItem>
+            <SelectItem value="">{{ ALL }}</SelectItem>
+            <SelectItem v-for="v in options.status || []" :key="v" :value="v">
+              {{ t('lfg.' + v.toLowerCase()) }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <Label class="text-xs text-muted-foreground">{{ t('lfg.dayOfWeek') }}</Label>
+        <Select :model-value="modelValue.dayOfWeek" @update:model-value="set('dayOfWeek', $event)">
+          <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
+          <SelectContent>
+            <SelectItem value="">{{ ALL }}</SelectItem>
+            <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ v }}</SelectItem>
           </SelectContent>
         </Select>
       </div>

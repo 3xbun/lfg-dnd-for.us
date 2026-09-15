@@ -91,7 +91,7 @@ onMounted(loadPost)
             <div v-if="post.day_of_week || post.start_time" class="flex items-center gap-2">
               <Label class="text-xs text-muted-foreground uppercase">{{ t('lfg.schedule') }}</Label>
               <span class="text-sm">
-                {{ [post.day_of_week, post.start_time].filter(Boolean).join(' ') }}
+                {{ [post.day_of_week, (post.start_time || '').slice(0, 5)].filter(Boolean).join(' ') }}
                 <span v-if="post.timezone" class="text-muted-foreground">({{ post.timezone }})</span>
               </span>
             </div>
@@ -140,7 +140,7 @@ onMounted(loadPost)
                 <p class="text-sm text-muted-foreground">{{ t('lfg.applyMessage') }}</p>
                 <p v-if="joinError" class="text-sm text-destructive">{{ joinError }}</p>
                 <Button class="w-full" :disabled="joining" @click="handleJoin">
-                  {{ isLoggedIn() ? t('lfg.applySend') : 'Discord' }}
+                  {{ isLoggedIn() ? t('lfg.applySend') : t('lfg.signInToJoin') }}
                 </Button>
               </template>
             </CardContent>
