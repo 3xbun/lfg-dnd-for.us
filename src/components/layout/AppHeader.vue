@@ -55,9 +55,8 @@ function hideHint() {
 <template>
   <header class="sticky top-0 z-50 border-b border-border bg-header/80 backdrop-blur-md">
     <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-6">
-      <router-link to="/" class="flex items-center gap-2 text-brand font-bold text-lg whitespace-nowrap">
-        <span class="text-2xl"><i class="fad fa-khanda text-brand"></i></span>
-        <span class="hidden sm:inline">LFG DnD For Us</span>
+      <router-link to="/" class="flex items-center">
+        <img src="/imgs/logo.png" alt="LFG DnD For Us" class="h-10 w-10 object-contain" />
       </router-link>
 
       <nav class="flex flex-1 items-center gap-1">
