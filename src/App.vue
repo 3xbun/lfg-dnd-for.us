@@ -1,6 +1,7 @@
 <script setup>
 import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
+import FloatingCreateButton from './components/layout/FloatingCreateButton.vue'
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import AppFooter from './components/layout/AppFooter.vue'
       <router-view />
     </main>
     <AppFooter />
+    <FloatingCreateButton />
   </div>
 </template>
 

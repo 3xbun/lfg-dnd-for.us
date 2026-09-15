@@ -90,31 +90,7 @@ function hideHint() {
           </span>
         </span>
 
-        <!-- Create post: same treatment -->
-        <span v-if="isLoggedIn()">
-          <router-link to="/lfg/create">
-            <Button variant="outline" size="sm" class="border-brand text-brand hover:bg-brand hover:text-white">
-              {{ t('nav.createPost') }}
-            </Button>
-          </router-link>
-        </span>
-        <span
-          v-else
-          class="relative inline-block cursor-not-allowed"
-          @mouseenter="showHint('create')"
-          @mouseleave="hideHint"
-        >
-          <Button variant="outline" size="sm" disabled aria-disabled="true" class="opacity-40">
-            {{ t('nav.createPost') }}
-          </Button>
-          <span
-            v-if="hintVisible === 'create'"
-            class="pointer-events-none absolute left-0 top-full z-50 mt-1 whitespace-nowrap rounded-xl border border-border bg-popover px-2.5 py-1.5 text-xs text-muted-foreground shadow-lg"
-          >
-            {{ t('nav.loginHintCreate') }}
-          </span>
-        </span>
-      </nav>
+        </nav>
 
       <div class="flex items-center gap-2">
         <Button variant="ghost" size="sm" @click="toggleLocale" class="font-bold">

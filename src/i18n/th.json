@@ -70,6 +70,12 @@
     "timezone": "เขตเวลา",
     "seatsTotal": "จำนวนที่นั่งทั้งหมด",
     "seatsOpen": "ที่นั่งว่าง",
+    "stepBasics": "ข้อมูลพื้นฐาน",
+    "stepDetails": "รายละเอียด",
+    "stepSchedule": "ตารางเวลา",
+    "stepSettings": "การตั้งค่า",
+    "next": "ถัดไป",
+    "requiredFields": "กรุณากรอกข้อมูลที่จำเป็นของขั้นตอนนี้ให้ครบถ้วน",
     "links": "ลิงก์",
     "facebookPost": "โพสต์ Facebook",
     "discordServer": "เซิร์ฟเวอร์ Discord"

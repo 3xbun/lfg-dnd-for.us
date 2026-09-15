@@ -70,6 +70,12 @@
     "timezone": "Timezone",
     "seatsTotal": "Total seats",
     "seatsOpen": "Seats open",
+    "stepBasics": "Basics",
+    "stepDetails": "Details",
+    "stepSchedule": "Schedule",
+    "stepSettings": "Settings",
+    "next": "Next",
+    "requiredFields": "Please fill in all required fields in this step.",
     "links": "Links",
     "facebookPost": "Facebook post",
     "discordServer": "Discord server"
