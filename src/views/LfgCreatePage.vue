@@ -134,7 +134,7 @@ onMounted(async () => {
 
             <div class="flex flex-col gap-1.5">
               <Label>{{ t('lfg.playStyle') }} *</Label>
-              <Select v-model="form.play_style">
+              <Select v-model="form.play_style" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
                 <SelectTrigger :placeholder="t('lfg.playStyle')" />
                 <SelectContent>
                   <SelectItem v-for="v in options.play_style || []" :key="v" :value="v">
@@ -163,7 +163,7 @@ onMounted(async () => {
 
             <div class="flex flex-col gap-1.5">
               <Label>{{ t('lfg.status') }}</Label>
-              <Select v-model="form.status">
+              <Select v-model="form.status" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
                 <SelectTrigger :placeholder="t('lfg.open')" />
                 <SelectContent>
                   <SelectItem v-for="v in options.status || []" :key="v" :value="v">
@@ -177,10 +177,10 @@ onMounted(async () => {
           <div class="grid grid-cols-3 gap-4 max-md:grid-cols-1">
             <div class="flex flex-col gap-1.5">
               <Label>{{ t('lfg.dayOfWeek') }}</Label>
-              <Select v-model="form.day_of_week">
+              <Select v-model="form.day_of_week" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
                 <SelectTrigger :placeholder="t('lfg.dayOfWeek')" />
                 <SelectContent>
-                  <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ v }}</SelectItem>
+                  <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ t('lfg.' + v.toLowerCase()) }}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

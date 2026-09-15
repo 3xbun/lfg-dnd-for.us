@@ -4,6 +4,7 @@ import { provide, ref } from 'vue'
 const props = defineProps({
   modelValue: { type: [String, Number, null], default: null },
   disabled: { type: Boolean, default: false },
+  getLabel: { type: Function, default: null },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -13,6 +14,7 @@ const triggerRef = ref(null)
 const dropdownStyle = ref({})
 
 provide('selectModelValue', props)
+provide('selectGetLabel', props.getLabel)
 provide('selectUpdateValue', (val) => {
   emit('update:modelValue', val)
   open.value = false

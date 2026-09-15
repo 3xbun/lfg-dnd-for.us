@@ -57,7 +57,7 @@ function set(key, value) {
 
       <div class="flex flex-col gap-1.5">
         <Label class="text-xs text-muted-foreground">{{ t('home.playStyle') }}</Label>
-        <Select :model-value="modelValue.playStyle" @update:model-value="set('playStyle', $event)">
+        <Select :model-value="modelValue.playStyle" @update:model-value="set('playStyle', $event)" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
           <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
           <SelectContent>
             <SelectItem value="">{{ ALL }}</SelectItem>
@@ -70,7 +70,7 @@ function set(key, value) {
 
       <div class="flex flex-col gap-1.5">
         <Label class="text-xs text-muted-foreground">{{ t('home.status') }}</Label>
-        <Select :model-value="modelValue.status" @update:model-value="set('status', $event)">
+        <Select :model-value="modelValue.status" @update:model-value="set('status', $event)" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
           <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
           <SelectContent>
             <SelectItem value="">{{ ALL }}</SelectItem>
@@ -83,11 +83,11 @@ function set(key, value) {
 
       <div class="flex flex-col gap-1.5">
         <Label class="text-xs text-muted-foreground">{{ t('lfg.dayOfWeek') }}</Label>
-        <Select :model-value="modelValue.dayOfWeek" @update:model-value="set('dayOfWeek', $event)">
+        <Select :model-value="modelValue.dayOfWeek" @update:model-value="set('dayOfWeek', $event)" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
           <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
           <SelectContent>
             <SelectItem value="">{{ ALL }}</SelectItem>
-            <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ v }}</SelectItem>
+            <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ t('lfg.' + v.toLowerCase()) }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
