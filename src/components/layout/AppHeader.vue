@@ -2,11 +2,13 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '../../stores/auth.js'
+import { useTheme } from '../../stores/theme.js'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const { t, locale } = useI18n()
 const { isLoggedIn, state, load, logout, loginWithDiscord } = useAuth()
+const { state: theme, toggle: toggleTheme } = useTheme()
 
 // The session is an HttpOnly cookie owned by the server — ask who we are on boot.
 load()
@@ -117,6 +119,10 @@ function hideHint() {
       <div class="flex items-center gap-2">
         <Button variant="ghost" size="sm" @click="toggleLocale" class="font-bold">
           {{ locale === 'th' ? 'EN' : 'TH' }}
+        </Button>
+
+        <Button variant="ghost" size="sm" @click="toggleTheme" :title="theme.isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+          {{ theme.isDark ? '&#9728;' : '&#9790;' }}
         </Button>
 
         <template v-if="isLoggedIn()">
