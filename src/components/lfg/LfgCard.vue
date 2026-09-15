@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { displayLocation } from '../../utils/location.js'
 
 const { t } = useI18n()
 
@@ -50,7 +51,7 @@ const defaultPlayStyleIcon = '<i class="fad fa-gamepad"></i>'
             <span v-html="playStyleIcons[post.play_style] || defaultPlayStyleIcon"></span>
             {{ t('lfg.' + (post.play_style?.toLowerCase() || 'online')) }}
           </span>
-          <span v-if="post.location" class="truncate">{{ post.location }}</span>
+          <span v-if="post.location" class="truncate">{{ displayLocation(post.location) }}</span>
         </div>
       </CardContent>
     </Card>

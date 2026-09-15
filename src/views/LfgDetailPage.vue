@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as api from '../api/lfg.js'
 import { useAuth } from '../stores/auth.js'
+import { displayLocation } from '../utils/location.js'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -250,7 +251,7 @@ onMounted(loadPost)
           <CardContent class="flex flex-col gap-4">
             <div v-if="post.location" class="flex items-center gap-2">
               <Label class="text-xs text-muted-foreground uppercase">{{ t('lfg.location') }}</Label>
-              <span class="text-sm">{{ post.location }}</span>
+              <span class="text-sm">{{ displayLocation(post.location) }}</span>
             </div>
 
             <div v-if="post.seats_total != null" class="flex items-center gap-2">

@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as api from '../api/lfg.js'
 import { useAuth } from '../stores/auth.js'
+import { displayLocation, locationsForStyle, locationMatches } from '../utils/location.js'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -44,6 +45,17 @@ const steps = [
 ]
 const step = ref(0)
 const stepError = ref('')
+
+const filteredLocations = computed(() =>
+  locationsForStyle(options.value.location || [], form.value.play_style)
+)
+
+// If the user revisits step 1 and changes play_style, clear any stored
+// location that no longer belongs to the newly chosen style.
+watch(() => form.value.play_style, (style) => {
+  const loc = form.value.location
+  if (loc && !locationMatches(style, loc)) form.value.location = ''
+})
 
 function circleClass(i) {
   if (i < step.value) return 'bg-brand text-white'
@@ -234,10 +246,10 @@ onMounted(async () => {
 
             <div class="flex flex-col gap-1.5">
               <Label>{{ t('lfg.location') }}</Label>
-              <Select v-model="form.location">
+              <Select v-model="form.location" :get-label="v => displayLocation(v)">
                 <SelectTrigger :placeholder="t('lfg.location')" />
                 <SelectContent>
-                  <SelectItem v-for="v in options.location || []" :key="v" :value="v">{{ v }}</SelectItem>
+                  <SelectItem v-for="v in filteredLocations" :key="v" :value="v">{{ displayLocation(v) }}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
