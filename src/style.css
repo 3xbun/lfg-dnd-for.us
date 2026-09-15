@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --brand: oklch(0.97 0.001 106.424);
+  --brand-hover: #c73652;
+  --brand-bg: rgba(233, 69, 96, 0.15);
+
+  --bg: #0f0f1a;
+  --header-bg: #1a1a2e;
+  --card-bg: #1e1e2e;
+  --input-bg: #12121c;
+  --hover-bg: rgba(255, 255, 255, 0.05);
+
+  --text: #e0e0e0;
+  --text-secondary: #999;
+  --border: oklch(1 0 0 / 10%);
+
+  --sans: 'Noto Sans Thai', sans-serif;
+
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--card-bg);
+  --card-foreground: var(--text);
+  --popover: var(--card-bg);
+  --popover-foreground: var(--text);
+  --primary: oklch(0.795 0.184 86.047);
+  --primary-foreground: #fff;
+  --secondary: #2a2a3e;
+  --secondary-foreground: #e0e0e0;
+  --muted: #2a2a3e;
+  --muted-foreground: #999;
+  --accent: #2a2a3e;
+  --accent-foreground: #e0e0e0;
+  --destructive: oklch(0.704 0.191 22.216);
+  --input: var(--input-bg);
+  --ring: oklch(0.709 0.01 56.259);
+  --radius: 0.875rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+@theme inline {
+  --font-sans: 'Inter', 'Noto Sans Thai', sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-header: var(--header-bg);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

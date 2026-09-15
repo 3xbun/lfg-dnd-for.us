@@ -1,0 +1,25 @@
+{
+  "name": "lfg-dnd-for-us",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "wrangler pages dev",
+    "deploy": "wrangler pages deploy dist"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "axios": "^1.20.0",
+    "tailwindcss": "^4.3.3",
+    "vue": "^3.5.42",
+    "vue-i18n": "^9.14.5",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "vite": "^8.3.0",
+    "wrangler": "^4.0.0"
+  }
+}

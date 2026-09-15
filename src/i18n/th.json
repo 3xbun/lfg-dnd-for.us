@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "home": "หน้าแรก",
+    "createPost": "สร้างโพสต์ LFG",
+    "logout": "ออกจากระบบ"
+  },
+  "home": {
+    "title": "หาปาร์ตี้เล่นเกม",
+    "subtitle": "ค้นหาผู้เล่นและ GM สำหรับการผจญภัย TTRPG ของคุณ",
+    "searchPlaceholder": "ค้นหาโพสต์...",
+    "filters": "ตัวกรอง",
+    "gameSystem": "ระบบเกม",
+    "playStyle": "รูปแบบการเล่น",
+    "status": "สถานะ",
+    "all": "ทั้งหมด",
+    "noPosts": "ไม่พบโพสต์ LFG"
+  },
+  "lfg": {
+    "title": "หัวข้อ",
+    "titlePlaceholder": "เช่น Lost Mine of Phandelver - เปิดรับผู้เล่นใหม่",
+    "gameSystem": "ระบบเกม",
+    "description": "รายละเอียด",
+    "descriptionPlaceholder": "อธิบายเกมของคุณ ความคาดหวัง กฎพิเศษ...",
+    "playStyle": "รูปแบบการเล่น",
+    "online": "ออนไลน์",
+    "offline": "ออฟไลน์",
+    "hybrid": "ไฮบริด",
+    "location": "สถานที่",
+    "locationPlaceholder": "เช่น Discord, Roll20, ใจกลางกรุงเทพ",
+    "status": "สถานะ",
+    "open": "เปิดรับ",
+    "full": "เต็มแล้ว",
+    "closed": "ปิดรับ",
+    "create": "สร้างโพสต์ LFG",
+    "edit": "แก้ไขโพสต์ LFG",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "delete": "ลบ",
+    "confirmDelete": "คุณแน่ใจหรือว่าต้องการลบโพสต์นี้?",
+    "postedBy": "โพสต์โดย",
+    "createdAt": "สร้างเมื่อ",
+    "join": "เข้าร่วม / สมัคร",
+    "joinSuccess": "ส่งใบสมัครแล้ว!",
+    "applyMessage": "เข้าร่วมเพื่อรับลิงก์เชิญและปรากฏในรายชื่อผู้เล่น",
+    "applySend": "ส่งใบสมัคร",
+    "seats": "ที่นั่ง",
+    "schedule": "ตารางเวลา",
+    "links": "ลิงก์",
+    "facebookPost": "โพสต์ Facebook",
+    "discordServer": "เซิร์ฟเวอร์ Discord"
+  },
+  "auth": {
+    "signingIn": "กำลังเข้าสู่ระบบด้วย Discord...",
+    "denied": "คุณยกเลิกการเข้าสู่ระบบด้วย Discord",
+    "error": "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่"
+  },
+  "profile": {
+    "title": "โปรไฟล์",
+    "noPosts": "ไม่พบโพสต์ LFG"
+  },
+  "common": {
+    "loading": "กำลังโหลด...",
+    "error": "เกิดข้อผิดพลาด",
+    "back": "กลับ",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก"
+  }
+}

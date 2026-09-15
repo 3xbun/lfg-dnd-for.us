@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "home": "Home",
+    "createPost": "Create LFG Post",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Looking for Group",
+    "subtitle": "Find players and GMs for your TTRPG adventures",
+    "searchPlaceholder": "Search posts...",
+    "filters": "Filters",
+    "gameSystem": "Game System",
+    "playStyle": "Play Style",
+    "status": "Status",
+    "all": "All",
+    "noPosts": "No LFG posts found."
+  },
+  "lfg": {
+    "title": "Title",
+    "titlePlaceholder": "e.g. Lost Mine of Phandelver - New Players Welcome",
+    "gameSystem": "Game System",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe your game, session expectations, house rules...",
+    "playStyle": "Play Style",
+    "online": "Online",
+    "offline": "Offline",
+    "hybrid": "Hybrid",
+    "location": "Location",
+    "locationPlaceholder": "e.g. Discord, Roll20, Bangkok CBD",
+    "status": "Status",
+    "open": "Open",
+    "full": "Full",
+    "closed": "Closed",
+    "create": "Create LFG Post",
+    "edit": "Edit LFG Post",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this post?",
+    "postedBy": "Posted by",
+    "createdAt": "Created",
+    "join": "Join / Apply",
+    "joinSuccess": "Application sent!",
+    "applyMessage": "Join to get the invite link and appear on the player list.",
+    "applySend": "Send Application",
+    "seats": "Seats",
+    "schedule": "Schedule",
+    "links": "Links",
+    "facebookPost": "Facebook post",
+    "discordServer": "Discord server"
+  },
+  "auth": {
+    "signingIn": "Signing in with Discord...",
+    "denied": "You cancelled the Discord sign-in.",
+    "error": "Sign-in failed. Please try again."
+  },
+  "profile": {
+    "title": "Profile",
+    "noPosts": "No LFG posts found."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel"
+  }
+}
