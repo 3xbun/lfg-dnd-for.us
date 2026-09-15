@@ -3,6 +3,8 @@
     "home": "หน้าแรก",
     "createPost": "สร้างโพสต์ LFG",
     "myGroups": "กลุ่มของฉัน",
+    "loginHintGroups": "เข้าสู่ระบบด้วย Discord เพื่อดูกลุ่มของฉัน",
+    "loginHintCreate": "เข้าสู่ระบบด้วย Discord เพื่อสร้างโพสต์",
     "logout": "ออกจากระบบ"
   },
   "home": {

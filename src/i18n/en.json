@@ -3,6 +3,8 @@
     "home": "Home",
     "createPost": "Create LFG Post",
     "myGroups": "My Groups",
+    "loginHintGroups": "Sign in with Discord to see your groups",
+    "loginHintCreate": "Sign in with Discord to post a group",
     "logout": "Logout"
   },
   "home": {
