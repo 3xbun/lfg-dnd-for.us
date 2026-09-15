@@ -22,10 +22,11 @@ const statusKeys = {
 }
 
 const playStyleIcons = {
-  Online: '&#x1F310;',
-  Offline: '&#x1F3E0;',
-  Hybrid: '&#x1F504;',
+  Online: '<i class="fad fa-globe"></i>',
+  Offline: '<i class="fad fa-house"></i>',
+  Hybrid: '<i class="fad fa-arrows-rotate"></i>',
 }
+const defaultPlayStyleIcon = '<i class="fad fa-gamepad"></i>'
 </script>
 
 <template>
@@ -46,7 +47,7 @@ const playStyleIcons = {
       <CardContent>
         <div class="flex items-center gap-4 text-sm text-muted-foreground">
           <span class="flex items-center gap-1">
-            <span v-html="playStyleIcons[post.play_style] || '&#x1F3AE;'"></span>
+            <span v-html="playStyleIcons[post.play_style] || defaultPlayStyleIcon"></span>
             {{ t('lfg.' + (post.play_style?.toLowerCase() || 'online')) }}
           </span>
           <span v-if="post.location" class="truncate">{{ post.location }}</span>
