@@ -38,6 +38,17 @@ const form = ref({
   timezone: 'Asia/Bangkok',
 })
 
+// The API stores days as short forms (Mon, Tue, …) but the i18n keys are full
+// names (monday, tuesday, …). Map short → full so the labels resolve.
+const DAY_KEY = {
+  mon: 'monday', tue: 'tuesday', wed: 'wednesday',
+  thu: 'thursday', fri: 'friday', sat: 'saturday', sun: 'sunday',
+}
+function dayLabel(v) {
+  if (!v) return ''
+  return t(`lfg.${DAY_KEY[v.toLowerCase()] || v.toLowerCase()}`)
+}
+
 const steps = [
   { key: 'stepBasics' },
   { key: 'stepDetails' },
@@ -309,10 +320,10 @@ onMounted(async () => {
             <div class="grid grid-cols-3 gap-4 max-md:grid-cols-1">
               <div class="flex flex-col gap-1.5">
                 <Label>{{ t('lfg.dayOfWeek') }}</Label>
-                <Select v-model="form.day_of_week" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
+                <Select v-model="form.day_of_week" :get-label="dayLabel">
                   <SelectTrigger :placeholder="t('lfg.dayOfWeek')" />
                   <SelectContent>
-                    <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ t('lfg.' + v.toLowerCase()) }}</SelectItem>
+                    <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ dayLabel(v) }}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

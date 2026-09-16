@@ -70,6 +70,7 @@
     "friday": "Friday",
     "saturday": "Saturday",
     "sunday": "Sunday",
+    "flexible": "Flexible",
     "startTime": "Start time",
     "endTime": "End time",
     "timezone": "Timezone",
