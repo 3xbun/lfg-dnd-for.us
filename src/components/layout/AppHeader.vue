@@ -2,17 +2,25 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '../../stores/auth.js'
+import { useTheme } from '../../stores/theme.js'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { isLoggedIn, state, load, logout, loginWithDiscord } = useAuth()
+const { state: theme, toggle: toggleTheme } = useTheme()
 
 // The session is an HttpOnly cookie owned by the server — ask who we are on boot.
 load()
 
-// Minimal nav: just the logo (home) and auth. When signed in, the avatar is a
-// menu button — clicking it reveals My Games + Logout.
+function toggleLocale() {
+  locale.value = locale.value === 'th' ? 'en' : 'th'
+  localStorage.setItem('locale', locale.value)
+}
+
+// Minimal nav: logo (home) + theme/language toggles (everyone) + auth on the
+// right. When signed in, the avatar is a menu button — clicking it reveals
+// My Games + Logout.
 const menuOpen = ref(false)
 
 function toggleMenu() {
@@ -48,7 +56,17 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
         <img src="/imgs/logo.png" alt="LFG DnD For Us" class="h-9 w-9 object-contain sm:h-10 sm:w-10" />
       </router-link>
 
-      <div class="flex shrink-0 items-center gap-2">
+      <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <!-- Theme + language: available to everyone, signed in or not -->
+        <Button variant="ghost" size="sm" @click="toggleTheme" :title="theme.isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+          <i v-if="theme.isDark" class="fad fa-sun"></i>
+          <i v-else class="fad fa-moon"></i>
+        </Button>
+
+        <Button variant="ghost" size="sm" @click="toggleLocale" class="font-bold">
+          {{ locale === 'th' ? 'EN' : 'TH' }}
+        </Button>
+
         <!-- Signed in: avatar opens a small menu (My Games / Logout) -->
         <div v-if="isLoggedIn()" data-profile-menu class="relative">
           <button
