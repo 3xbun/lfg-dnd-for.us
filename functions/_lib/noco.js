@@ -180,7 +180,13 @@ export async function listLinks(env, table, linkField, id, pageSize = 100) {
     env,
     `data/${cfg(env).base}/${table}/links/${linkField}/${id}${query({ page: 1, pageSize })}`
   );
-  return (data?.records || data?.list || []).map(flatten);
+  // The /links endpoint shape depends on the relation: a one-to-one link
+  // (e.g. a post's single owner) returns a SINGULAR `record` object, while a
+  // many-to-many returns a `records` array. Handle both, or ownership checks
+  // silently see an empty list and every edit/delete 403s.
+  const recs =
+    data?.records || data?.list || (data?.record ? [data.record] : []);
+  return recs.map(flatten);
 }
 
 export async function addLink(env, table, linkField, id, targetIds) {

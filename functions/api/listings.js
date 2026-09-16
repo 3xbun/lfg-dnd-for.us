@@ -9,7 +9,7 @@ import {
   postOwnerLinkId,
 } from '../_lib/noco.js';
 import { getSession, json, unauthorized, badRequest, methodNotAllowed } from '../_lib/auth.js';
-import { validateLinkFields } from '../_lib/validate.js';
+import { validateLinkFields, validateSessionTimes } from '../_lib/validate.js';
 
 /** Columns a client is allowed to write. Never trust arbitrary keys.
  *  The link columns are handled separately by validateLinkFields(). */

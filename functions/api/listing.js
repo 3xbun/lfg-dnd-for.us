@@ -6,7 +6,7 @@ import {
   isPostOwner,
 } from '../_lib/noco.js';
 import { getSession, json, unauthorized, badRequest, methodNotAllowed } from '../_lib/auth.js';
-import { validateLinkFields } from '../_lib/validate.js';
+import { validateLinkFields, validateSessionTimes } from '../_lib/validate.js';
 
 const WRITABLE = [
   'title',
