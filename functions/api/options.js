@@ -1,4 +1,4 @@
-import { TABLES, getTableFields } from '../_lib/noco.js';
+import { TABLES, getTableFields, listAll } from '../_lib/noco.js';
 import { json, methodNotAllowed } from '../_lib/auth.js';
 
 /** Columns of LFG_Posts the UI needs choice-lists for. */
@@ -11,15 +11,22 @@ const LISTING_COLUMNS = ['game_system', 'play_style', 'location', 'status', 'day
  */
 export async function onRequestGet({ env }) {
   try {
-    const [listingFields, reportFields] = await Promise.all([
+    const [listingFields, reportFields, listingRecords] = await Promise.all([
       getTableFields(env, TABLES.posts),
       getTableFields(env, TABLES.reports),
+      listAll(env, TABLES.posts, { fields: 'tags' }),
     ]);
 
     const options = {};
     for (const f of listingFields) {
       if (LISTING_COLUMNS.includes(f.title)) options[f.title] = f.choices;
     }
+    options.tags = [...new Set(
+      listingRecords
+        .flatMap((record) => Array.isArray(record.tags) ? record.tags : String(record.tags || '').split(','))
+        .map((tag) => tag.trim())
+        .filter(Boolean)
+    )].sort((a, b) => a.localeCompare(b));
     const reason = reportFields.find((f) => f.title === 'reason');
     if (reason) options.report_reason = reason.choices;
 

@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 
 const { t, locale } = useI18n()
@@ -38,6 +39,8 @@ const form = ref({
   end_time: '',
   tags: '',
 })
+const tagInput = ref('')
+const tags = ref([])
 
 // Optional links — people often post on Facebook / Discord *before* listing
 // here, so these are attached during creation, not after.
@@ -96,6 +99,25 @@ function chooseFromOptions() {
   if (!typed) return
   const match = filteredLocations.value.find((v) => displayLocation(v) === typed)
   form.value.location = match || ''
+}
+
+function addTag() {
+  const value = tagInput.value.trim()
+  if (!value) return
+  const existing = new Set(tags.value.map((tag) => tag.toLowerCase()))
+  if (!existing.has(value.toLowerCase())) tags.value.push(value)
+  tagInput.value = ''
+}
+
+function removeTag(index) {
+  tags.value.splice(index, 1)
+}
+
+function setTags(value) {
+  tags.value = String(value || '')
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean)
 }
 
 function circleClass(i) {
@@ -158,13 +180,14 @@ async function loadPost() {
       day_of_week: post.day_of_week || '',
       start_time: (post.start_time || '').slice(0, 5),
       end_time: (post.end_time || '').slice(0, 5),
-      tags: Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || ''),
+      tags: '',
     }
     links.value = {
       facebook_url: post.facebook_url || '',
       discord_invite_url: post.discord_invite_url || '',
       discord_server_id: post.discord_server_id || '',
     }
+    setTags(Array.isArray(post.tags) ? post.tags.join(', ') : post.tags)
   } catch (err) {
     error.value = err?.response?.data?.message || 'Failed to load listing'
   } finally {
@@ -182,6 +205,7 @@ async function handleSubmit() {
     // rejecting or storing an empty SingleSelect value
     const record = {}
     for (const [k, v] of Object.entries(form.value)) record[k] = v === '' ? null : v
+    record.tags = tags.value.length ? tags.value.join(', ') : null
     record.status = form.value.status || 'Open'
     record.location = prefixLocation(form.value.play_style, form.value.location)
     // Links (optional) — both the create and update endpoints accept them.
@@ -322,7 +346,24 @@ onMounted(async () => {
 
             <div class="flex flex-col gap-1.5">
               <Label>{{ t('lfg.tags') }}</Label>
-              <Input v-model="form.tags" :placeholder="t('lfg.tagsPlaceholder')" />
+              <div v-if="tags.length" class="flex flex-wrap gap-1.5">
+                <Badge v-for="(tag, index) in tags" :key="tag" variant="secondary" class="gap-1">
+                  {{ tag }}
+                  <button
+                    type="button"
+                    class="text-muted-foreground hover:text-foreground"
+                    :aria-label="`Remove ${tag}`"
+                    @click="removeTag(index)"
+                  >
+                    <i class="fad fa-xmark text-xs"></i>
+                  </button>
+                </Badge>
+              </div>
+              <Input
+                v-model="tagInput"
+                :placeholder="t('lfg.tagsPlaceholder')"
+                @keydown.enter.prevent="addTag"
+              />
             </div>
           </div>
 

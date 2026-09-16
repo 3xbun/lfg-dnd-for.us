@@ -27,7 +27,7 @@
     "description": "Description",
     "descriptionPlaceholder": "Describe your game, session expectations, house rules...",
     "tags": "Tags",
-    "tagsPlaceholder": "e.g. beginner-friendly, one-shot, roleplay",
+    "tagsPlaceholder": "Type a tag, then press Enter",
     "playStyle": "Play Style",
     "online": "Online",
     "offline": "Offline",
