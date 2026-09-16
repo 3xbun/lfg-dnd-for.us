@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import * as api from '../api/lfg.js'
 import { useAuth } from '../stores/auth.js'
 import { displayLocation, locationsForStyle, locationMatches, prefixLocation } from '../utils/location.js'
+import { dayLabel } from '../utils/day.js'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -37,17 +38,6 @@ const form = ref({
   end_time: '',
   timezone: 'Asia/Bangkok',
 })
-
-// The API stores days as short forms (Mon, Tue, …) but the i18n keys are full
-// names (monday, tuesday, …). Map short → full so the labels resolve.
-const DAY_KEY = {
-  mon: 'monday', tue: 'tuesday', wed: 'wednesday',
-  thu: 'thursday', fri: 'friday', sat: 'saturday', sun: 'sunday',
-}
-function dayLabel(v) {
-  if (!v) return ''
-  return t(`lfg.${DAY_KEY[v.toLowerCase()] || v.toLowerCase()}`)
-}
 
 const steps = [
   { key: 'stepBasics' },
@@ -320,10 +310,10 @@ onMounted(async () => {
             <div class="grid grid-cols-3 gap-4 max-md:grid-cols-1">
               <div class="flex flex-col gap-1.5">
                 <Label>{{ t('lfg.dayOfWeek') }}</Label>
-                <Select v-model="form.day_of_week" :get-label="dayLabel">
+                <Select v-model="form.day_of_week" :get-label="v => dayLabel(t, v)">
                   <SelectTrigger :placeholder="t('lfg.dayOfWeek')" />
                   <SelectContent>
-                    <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ dayLabel(v) }}</SelectItem>
+                    <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ dayLabel(t, v) }}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

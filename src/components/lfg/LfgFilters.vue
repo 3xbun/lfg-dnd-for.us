@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 import { getOptions } from '@/api/lfg.js'
+import { dayLabel } from '@/utils/day.js'
 
 const { t } = useI18n()
 
@@ -83,11 +84,11 @@ function set(key, value) {
 
       <div class="flex flex-col gap-1.5">
         <Label class="text-xs text-muted-foreground">{{ t('lfg.dayOfWeek') }}</Label>
-        <Select :model-value="modelValue.dayOfWeek" @update:model-value="set('dayOfWeek', $event)" :get-label="v => v ? t('lfg.' + v.toLowerCase()) : ''">
+        <Select :model-value="modelValue.dayOfWeek" @update:model-value="set('dayOfWeek', $event)" :get-label="v => dayLabel(t, v)">
           <SelectTrigger class="h-8 text-xs" :placeholder="ALL" />
           <SelectContent>
             <SelectItem value="">{{ ALL }}</SelectItem>
-            <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ t('lfg.' + v.toLowerCase()) }}</SelectItem>
+            <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ dayLabel(t, v) }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
