@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as api from '../api/lfg.js'
@@ -41,6 +41,13 @@ const reportDone = ref(false)
 const reportError = ref('')
 
 const statusVariant = { Open: 'default', Full: 'secondary', Closed: 'destructive' }
+
+const locationLabel = computed(() => {
+  const style = (post.value?.play_style || '').toLowerCase()
+  if (style === 'online') return t('lfg.platform')
+  if (style === 'offline') return t('lfg.location')
+  return t('lfg.platformLocation')
+})
 
 async function loadPost() {
   try {
@@ -250,7 +257,7 @@ onMounted(loadPost)
 
           <CardContent class="flex flex-col gap-4">
             <div v-if="post.location" class="flex items-center gap-2">
-              <Label class="text-xs text-muted-foreground uppercase">{{ t('lfg.location') }}</Label>
+              <Label class="text-xs text-muted-foreground uppercase">{{ locationLabel }}</Label>
               <span class="text-sm">{{ displayLocation(post.location) }}</span>
             </div>
 

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as api from '../api/lfg.js'
 import { useAuth } from '../stores/auth.js'
-import { displayLocation, locationsForStyle, locationMatches } from '../utils/location.js'
+import { displayLocation, locationsForStyle, locationMatches, prefixLocation } from '../utils/location.js'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { load, loginWithDiscord } = useAuth()
@@ -46,16 +46,46 @@ const steps = [
 const step = ref(0)
 const stepError = ref('')
 
+const CUSTOM_LOCATION = '__custom__'
+const customLocation = ref(false)
+
+const locationLabel = computed(() => {
+  const style = (form.value.play_style || '').toLowerCase()
+  if (style === 'online') return t('lfg.platform')
+  if (style === 'offline') return t('lfg.location')
+  return t('lfg.platformLocation')
+})
+
 const filteredLocations = computed(() =>
   locationsForStyle(options.value.location || [], form.value.play_style)
+    .sort((a, b) => displayLocation(a).localeCompare(displayLocation(b), locale.value))
 )
+
+// Selecting "Others" (อื่น ๆ) switches the field into free-text mode.
+watch(() => form.value.location, (val) => {
+  if (val === CUSTOM_LOCATION) {
+    customLocation.value = true
+    form.value.location = ''
+  }
+})
 
 // If the user revisits step 1 and changes play_style, clear any stored
 // location that no longer belongs to the newly chosen style.
 watch(() => form.value.play_style, (style) => {
+  if (customLocation.value) return
   const loc = form.value.location
   if (loc && !locationMatches(style, loc)) form.value.location = ''
 })
+
+// Jump back from custom text to the option list; keep the text if it maps to
+// one of the choices, otherwise clear it.
+function chooseFromOptions() {
+  customLocation.value = false
+  const typed = form.value.location
+  if (!typed) return
+  const match = filteredLocations.value.find((v) => displayLocation(v) === typed)
+  form.value.location = match || ''
+}
 
 function circleClass(i) {
   if (i < step.value) return 'bg-brand text-white'
@@ -103,12 +133,14 @@ async function loadPost() {
   loading.value = true
   try {
     const post = await api.getListing(route.params.id)
+    const loc = post.location || ''
+    customLocation.value = !!loc && !(options.value.location || []).includes(loc)
     form.value = {
       title: post.title || '',
       game_system: post.game_system || '',
       description: post.description || '',
       play_style: post.play_style || '',
-      location: post.location || '',
+      location: customLocation.value ? displayLocation(loc) : loc,
       status: post.status || 'Open',
       seats_total: post.seats_total ?? null,
       seats_open: post.seats_open ?? null,
@@ -134,6 +166,7 @@ async function handleSubmit() {
     const record = {}
     for (const [k, v] of Object.entries(form.value)) record[k] = v === '' ? null : v
     record.status = form.value.status || 'Open'
+    record.location = prefixLocation(form.value.play_style, form.value.location)
 
     if (isEdit.value) {
       await api.updateListing(route.params.id, record)
@@ -245,13 +278,27 @@ onMounted(async () => {
             </div>
 
             <div class="flex flex-col gap-1.5">
-              <Label>{{ t('lfg.location') }}</Label>
-              <Select v-model="form.location" :get-label="v => displayLocation(v)">
-                <SelectTrigger :placeholder="t('lfg.location')" />
-                <SelectContent>
-                  <SelectItem v-for="v in filteredLocations" :key="v" :value="v">{{ displayLocation(v) }}</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label>{{ locationLabel }}</Label>
+              <template v-if="customLocation">
+                <div class="flex items-center gap-2">
+                  <Input v-model="form.location" :placeholder="t('lfg.locationPlaceholder')" />
+                  <Button type="button" variant="ghost" size="sm" class="shrink-0" @click="chooseFromOptions">
+                    {{ t('lfg.changeLocation') }}
+                  </Button>
+                </div>
+              </template>
+              <template v-else>
+                <Select v-model="form.location" :get-label="v => displayLocation(v)">
+                  <SelectTrigger :placeholder="locationLabel" />
+                  <SelectContent>
+                    <SelectItem v-for="v in filteredLocations" :key="v" :value="v">{{ displayLocation(v) }}</SelectItem>
+                    <div v-if="['online', 'offline'].includes(form.play_style.toLowerCase())" class="my-1 h-px bg-border"></div>
+                    <SelectItem v-if="['online', 'offline'].includes(form.play_style.toLowerCase())" :value="CUSTOM_LOCATION">
+                      <i class="fad fa-pen-to-square mr-1.5 text-xs"></i>{{ t('lfg.others') }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </template>
             </div>
           </div>
 

@@ -4,6 +4,7 @@ import {
   listLinks,
   getRecordsByIds,
   findUserByDiscordId,
+  userPostsLinkId,
 } from '../_lib/noco.js';
 import { getSession, json, unauthorized, methodNotAllowed } from '../_lib/auth.js';
 
@@ -22,10 +23,11 @@ export async function onRequestGet({ request, env }) {
     const user = await findUserByDiscordId(env, session.uid);
     if (!user) return json({ ok: true, mine: [], joined: [] });
 
-    const [postLinks, joinLinks] = await Promise.all([
-      listLinks(env, TABLES.users, LINKS.userPosts, user.Id),
+    const [userPostsLink, joinLinks] = await Promise.all([
+      userPostsLinkId(env),
       listLinks(env, TABLES.users, LINKS.userJoins, user.Id),
     ]);
+    const postLinks = await listLinks(env, TABLES.users, userPostsLink, user.Id);
 
     const mine = await getRecordsByIds(env, TABLES.posts, postLinks.map((p) => p.Id));
 

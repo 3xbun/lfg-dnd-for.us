@@ -14,15 +14,16 @@ export const TABLES = {
  * Relation (link) FIELD IDS, not titles. The v3 links endpoint
  * (`/data/{base}/{table}/links/{field}/{id}`) rejects a field *title* with
  * `422 Field '<title>' not found` — it needs the column id.
- * Source of truth: the `nocodb` skill, references/lfg-schema.md.
+ *
+ * The LFG_Posts → LFG_Users ownership link (renamed `owner` → `LFG_Users`) is
+ * NOT listed here: a rename or recreate changes its field id, so it is resolved
+ * from live table metadata at runtime by column title (see resolveLinkFieldId).
  */
 export const LINKS = {
-  postOwner: 'cgv3ed56a5ctw7i', // LFG_Posts.owner      -> LFG_Users
   joinListing: 'cc4yhg7auw8pneh', // LFG_Joins.listing  -> LFG_Posts
   joinPlayer: 'ca04pfnpdlqtcic', // LFG_Joins.player    -> LFG_Users
   // back-references on LFG_Users — the reliable way to list "my" rows, since
   // `where` CANNOT filter on a relation column (it returns nothing, silently).
-  userPosts: 'cn5rk0km2nrma01', // LFG_Users.LFG_Post  -> LFG_Posts
   userJoins: 'chkfv7lvmsq5j96', // LFG_Users.LFG_Join  -> LFG_Joins
   reportListing: 'c02vz9bh77y47bm', // LFG_Reports.listing  -> LFG_Posts
   reportReporter: 'crtyqtld6dztnlz', // LFG_Reports.reporter -> LFG_Users
@@ -207,6 +208,44 @@ export async function getTableFields(env, table) {
   }));
 }
 
+/*
+ * The ownership link on LFG_Posts was renamed `owner` → `LFG_Users`. NocoDB
+ * keeps a column's field id when it is renamed in place, but a recreated column
+ * gets a new id — and the /links endpoint needs the FIELD ID, never a title.
+ * Resolve it from live table metadata instead of hardcoding, so ownership works
+ * regardless of how the column was (re)created.
+ */
+const META_CACHE = new Map(); // `${base}|${table}` -> field metadata (promise)
+
+async function tableMeta(env, table) {
+  const key = `${cfg(env).base}|${table}`;
+  if (!META_CACHE.has(key)) {
+    META_CACHE.set(
+      key,
+      nc(env, `meta/bases/${cfg(env).base}/tables/${table}`).then((d) => d.fields || [])
+    );
+  }
+  return META_CACHE.get(key);
+}
+
+/** Find a relation column's field id by title; the first matching title wins. */
+export async function resolveLinkFieldId(env, table, titles) {
+  const fields = await tableMeta(env, table);
+  const hit = fields.find((f) => titles.includes(f.title));
+  if (!hit) {
+    throw new Error(`Relation column "${titles.join('" / "')}" not found on NocoDB table ${table}`);
+  }
+  return hit.id;
+}
+
+/** LFG_Posts.LFG_Users (legacy name: owner) → LFG_Users. */
+export const postOwnerLinkId = (env) =>
+  resolveLinkFieldId(env, TABLES.posts, ['LFG_Users', 'owner']);
+
+/** LFG_Users.LFG_Posts (legacy back-ref: LFG_Post / LFG_PostsList) → LFG_Posts. */
+export const userPostsLinkId = (env) =>
+  resolveLinkFieldId(env, TABLES.users, ['LFG_Posts', 'LFG_Post', 'LFG_PostsList']);
+
 /**
  * Resolve the LFG_Users row for a Discord id.
  * NOTE: the links endpoint returns only a PARTIAL projection of the related
@@ -231,10 +270,9 @@ export async function getRecordsByIds(env, table, ids) {
 
 /** True when `discordId` owns the given LFG_Posts row. */
 export async function isPostOwner(env, postId, discordId) {
-  const [user, owners] = await Promise.all([
-    findUserByDiscordId(env, discordId),
-    listLinks(env, TABLES.posts, LINKS.postOwner, postId),
-  ]);
-  if (!user || !owners.length) return false;
+  const user = await findUserByDiscordId(env, discordId);
+  if (!user) return false;
+  const ownerLink = await postOwnerLinkId(env);
+  const owners = await listLinks(env, TABLES.posts, ownerLink, postId);
   return owners.some((o) => Number(o.Id) === Number(user.Id));
 }

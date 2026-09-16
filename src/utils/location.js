@@ -15,3 +15,15 @@ export function locationsForStyle(locations, playStyle) {
 export function locationMatches(style, locationValue) {
   return locationsForStyle([locationValue], style).length > 0
 }
+
+/**
+ * Prefix a custom (free-text) location to match the chosen play style, so the
+ * stored value fits the On-/Off- scheme. Already-prefixed and Hybrid values
+ * pass through unchanged.
+ */
+export function prefixLocation(playStyle, value) {
+  if (!value || !playStyle) return value
+  if (playStyle === 'Hybrid' || locationMatches(playStyle, value)) return value
+  const prefix = playStyle === 'Offline' ? 'Off' : 'On'
+  return prefix + '-' + value
+}

@@ -73,7 +73,7 @@ no KV/D1 binding. The session never travels in a URL.
   on the data functions. Verify by curling `/api` without a session, never by
   curling the page.
 - Ownership is a NocoDB **relation**, not a client-supplied column: `POST /api/listings`
-  links `owner` server-side, and `PATCH`/`DELETE` compare the signed-in Discord id
+  links `LFG_Users` server-side, and `PATCH`/`DELETE` compare the signed-in Discord id
   against that relation.
 - Link columns are validated in one shared module (`functions/_lib/validate.js`)
   by both `/api/listings` and `/api/link` — host allow-lists, no `javascript:` URLs.

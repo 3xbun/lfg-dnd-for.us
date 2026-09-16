@@ -1,12 +1,12 @@
 import {
   TABLES,
-  LINKS,
   listRecords,
   createRecord,
   updateRecord,
   addLink,
   getRecord,
   findUserByDiscordId,
+  postOwnerLinkId,
 } from '../_lib/noco.js';
 import { getSession, json, unauthorized, badRequest, methodNotAllowed } from '../_lib/auth.js';
 import { validateLinkFields } from '../_lib/validate.js';
@@ -132,7 +132,8 @@ export async function onRequestPost({ request, env }) {
     // ownership is stored as a relation, not a column the client can spoof
     const owners = await findUserByDiscordId(env, session.uid);
     if (owners) {
-      await addLink(env, TABLES.posts, LINKS.postOwner, created.Id, [owners.Id]);
+      const ownerLink = await postOwnerLinkId(env);
+      await addLink(env, TABLES.posts, ownerLink, created.Id, [owners.Id]);
     }
 
     return json({ ok: true, record: await getRecord(env, TABLES.posts, created.Id) }, { status: 201 });
