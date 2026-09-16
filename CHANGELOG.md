@@ -8,14 +8,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Added
 
 - **Tag input and filtering** — create tags by pressing Enter, and select available tags from the NocoDB-backed home page filter.
+- **Discord owner messaging link** — post detail pages link straight to a Discord DM with the listing's owner.
 
 ### Changed
 
 - **Community links** — detail pages direct users to the listing's existing Facebook post or Discord server links.
+- **Footer** — copyright and credit text split into separate lines for readability.
 
 ### Removed
 
 - **Join / Apply section** — removed the unused in-app application flow from listing detail pages.
+
+### Fixed
+
+- **Creating a post with tags failed with 502** — the `tags` column was a SingleSelect with fixed choices, so free-form tags were rejected by NocoDB (422). Converted the column to free-text (SingleLineText); tags are now comma-separated.
+- **Custom ("Others") location failed with 502** — same root cause on the `location` column. Converted it to free-text and serve the curated platform/shop list from the options endpoint, so the dropdown keeps its suggestions while custom locations work.
 
 ## [1.0.0-beta.2] - 2026-09-16
 
