@@ -78,6 +78,7 @@
     "stepBasics": "Basics",
     "stepDetails": "Details",
     "stepSchedule": "Schedule",
+    "scheduleHint": "Optional — if you're still gathering people and don't have a set time yet, leave this blank and update it later.",
     "stepSettings": "Settings",
     "stepLinks": "Links",
     "linksHint": "Optional — link your Facebook post or Discord server if you've already posted about this group.",

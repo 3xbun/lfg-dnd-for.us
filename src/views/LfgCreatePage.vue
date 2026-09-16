@@ -321,6 +321,7 @@ onMounted(async () => {
 
           <!-- Step 3: Schedule -->
           <div v-show="step === 2" class="flex flex-col gap-4">
+            <p class="text-sm text-muted-foreground">{{ t('lfg.scheduleHint') }}</p>
             <div class="grid grid-cols-3 gap-4 max-md:grid-cols-1">
               <div class="flex flex-col gap-1.5">
                 <Label>{{ t('lfg.dayOfWeek') }}</Label>
