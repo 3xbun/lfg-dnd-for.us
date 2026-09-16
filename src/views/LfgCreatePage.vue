@@ -38,11 +38,20 @@ const form = ref({
   end_time: '',
 })
 
+// Optional links — people often post on Facebook / Discord *before* listing
+// here, so these are attached during creation, not after.
+const links = ref({
+  facebook_url: '',
+  discord_invite_url: '',
+  discord_server_id: '',
+})
+
 const steps = [
   { key: 'stepBasics' },
   { key: 'stepDetails' },
   { key: 'stepSchedule' },
   { key: 'stepSettings' },
+  { key: 'stepLinks' },
 ]
 const step = ref(0)
 const stepError = ref('')
@@ -149,6 +158,11 @@ async function loadPost() {
       start_time: (post.start_time || '').slice(0, 5),
       end_time: (post.end_time || '').slice(0, 5),
     }
+    links.value = {
+      facebook_url: post.facebook_url || '',
+      discord_invite_url: post.discord_invite_url || '',
+      discord_server_id: post.discord_server_id || '',
+    }
   } catch (err) {
     error.value = err?.response?.data?.message || 'Failed to load listing'
   } finally {
@@ -168,6 +182,8 @@ async function handleSubmit() {
     for (const [k, v] of Object.entries(form.value)) record[k] = v === '' ? null : v
     record.status = form.value.status || 'Open'
     record.location = prefixLocation(form.value.play_style, form.value.location)
+    // Links (optional) — both the create and update endpoints accept them.
+    for (const [k, v] of Object.entries(links.value)) record[k] = v === '' ? null : v
 
     if (isEdit.value) {
       await api.updateListing(route.params.id, record)
@@ -351,6 +367,23 @@ onMounted(async () => {
                 <Label>{{ t('lfg.seatsOpen') }}</Label>
                 <Input v-model.number="form.seats_open" type="number" min="0" max="20" />
               </div>
+            </div>
+          </div>
+
+          <!-- Step 5: Links (optional) -->
+          <div v-show="step === 4" class="flex flex-col gap-4">
+            <p class="text-sm text-muted-foreground">{{ t('lfg.linksHint') }}</p>
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.facebookUrl') }}</Label>
+              <Input v-model="links.facebook_url" placeholder="https://www.facebook.com/..." />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.discordInvite') }}</Label>
+              <Input v-model="links.discord_invite_url" placeholder="https://discord.gg/..." />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.discordServerId') }}</Label>
+              <Input v-model="links.discord_server_id" placeholder="123456789012345678" />
             </div>
           </div>
 

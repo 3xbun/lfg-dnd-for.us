@@ -79,6 +79,8 @@
     "stepDetails": "Details",
     "stepSchedule": "Schedule",
     "stepSettings": "Settings",
+    "stepLinks": "Links",
+    "linksHint": "Optional — link your Facebook post or Discord server if you've already posted about this group.",
     "next": "Next",
     "requiredFields": "Please fill in all required fields in this step.",
     "links": "Links",
