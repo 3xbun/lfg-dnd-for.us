@@ -20,7 +20,7 @@ Stack: Vue 3 + Tailwind CSS 4 on Cloudflare Pages, NocoDB as the database, Disco
 
 - **Browse & search** — home page listing all open LFG posts with full-text search
 - **Filters** — game system, play style (Online / Offline / Hybrid), status, and day of week; options derived live from the database
-- **Post detail page** — description, schedule (day, start & end time, timezone), location, seat count, and join flow
+- **Post detail page** — description, schedule (day, start & end time), location, seat count, and join flow
 - **Create wizard** — 4-step form (basics → schedule → location → review) for publishing a new post
 - **Discord sign-in** — OAuth flow with an HttpOnly session cookie; signed-in state, avatar, and logout
 - **My Groups dashboard** — posts you own (edit/delete, attach an FB/Discord link) and groups you've joined (leave)

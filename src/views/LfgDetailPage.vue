@@ -271,7 +271,6 @@ onMounted(loadPost)
               <Label class="text-xs text-muted-foreground uppercase">{{ t('lfg.schedule') }}</Label>
               <span class="text-sm">
                 {{ [post.day_of_week ? dayLabel(t, post.day_of_week) : '', (post.start_time || '').slice(0, 5), (post.end_time || '').slice(0, 5)].filter(Boolean).join(' – ') }}
-                <span v-if="post.timezone" class="text-muted-foreground">({{ post.timezone }})</span>
               </span>
             </div>
 

@@ -36,7 +36,6 @@ const form = ref({
   day_of_week: '',
   start_time: '',
   end_time: '',
-  timezone: 'Asia/Bangkok',
 })
 
 const steps = [
@@ -149,7 +148,6 @@ async function loadPost() {
       day_of_week: post.day_of_week || '',
       start_time: (post.start_time || '').slice(0, 5),
       end_time: (post.end_time || '').slice(0, 5),
-      timezone: post.timezone || 'Asia/Bangkok',
     }
   } catch (err) {
     error.value = err?.response?.data?.message || 'Failed to load listing'
@@ -326,11 +324,6 @@ onMounted(async () => {
               <div class="flex flex-col gap-1.5">
                 <Label>{{ t('lfg.endTime') }}</Label>
                 <Input v-model="form.end_time" type="time" />
-              </div>
-
-              <div class="flex flex-col gap-1.5">
-                <Label>{{ t('lfg.timezone') }}</Label>
-                <Input v-model="form.timezone" placeholder="Asia/Bangkok" />
               </div>
             </div>
           </div>

@@ -20,7 +20,6 @@ const WRITABLE = [
   'day_of_week',
   'start_time',
   'end_time',
-  'timezone',
 ];
 
 export function listingId(request) {
