@@ -14,7 +14,9 @@ export async function onRequestGet({ env }) {
     const [listingFields, reportFields, listingRecords] = await Promise.all([
       getTableFields(env, TABLES.posts),
       getTableFields(env, TABLES.reports),
-      listAll(env, TABLES.posts, { fields: 'tags' }),
+      // Read normal listing records because NocoDB v3 may reject a bare
+      // `fields=tags` projection on this table.
+      listAll(env, TABLES.posts),
     ]);
 
     const options = {};
