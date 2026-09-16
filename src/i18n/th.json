@@ -85,7 +85,8 @@
     "requiredFields": "กรุณากรอกข้อมูลที่จำเป็นของขั้นตอนนี้ให้ครบถ้วน",
     "links": "ลิงก์",
     "facebookPost": "โพสต์ Facebook",
-    "discordServer": "เซิร์ฟเวอร์ Discord"
+    "discordServer": "เซิร์ฟเวอร์ Discord",
+    "messageOwner": "ส่งข้อความหาเจ้าของโพสต์ใน Discord"
   },
   "auth": {
     "signingIn": "กำลังเข้าสู่ระบบด้วย Discord...",

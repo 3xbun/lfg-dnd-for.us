@@ -268,6 +268,17 @@ onMounted(loadPost)
         </Card>
 
         <div class="flex flex-col gap-4">
+          <a
+            v-if="!isOwner && post.owner_discord_id"
+            :href="`https://discord.com/users/${post.owner_discord_id}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-9 items-center justify-center gap-1.5 whitespace-nowrap rounded-2xl bg-[#5865F2] px-4 text-sm font-medium text-white shadow-md shadow-[#5865F2]/30 transition-all hover:bg-[#4752C4]"
+          >
+            <i class="fab fa-discord" aria-hidden="true"></i>
+            {{ t('lfg.messageOwner') }}
+          </a>
+
           <Card v-if="post.facebook_url || post.discord_invite_url">
             <CardHeader class="pb-3">
               <CardTitle class="text-sm">{{ t('lfg.links') }}</CardTitle>

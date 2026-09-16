@@ -1,6 +1,8 @@
 import {
   TABLES,
   getRecordOrNull,
+  getRecord,
+  listLinks,
   updateRecord,
   deleteRecord,
   isPostOwner,
@@ -40,6 +42,17 @@ export async function onRequestGet({ request, env }) {
     const record = await getRecordOrNull(env, TABLES.posts, id);
     if (!record) return json({ ok: false, message: 'Not found' }, { status: 404 });
 
+    let ownerDiscordId = null;
+    try {
+      const ownerLink = await postOwnerLinkId(env);
+      const owners = await listLinks(env, TABLES.posts, ownerLink, id, 1);
+      if (owners[0]?.Id) {
+        const owner = await getRecord(env, TABLES.users, owners[0].Id);
+        ownerDiscordId = owner?.discord_id ? String(owner.discord_id) : null;
+      }
+    } catch {}
+    const publicRecord = { ...record, owner_discord_id: ownerDiscordId };
+
     // Tell the client whether it may edit — the server still enforces this on
     // PATCH/DELETE, this only drives which controls the UI shows.
     let isOwner = false;
@@ -51,7 +64,7 @@ export async function onRequestGet({ request, env }) {
       ? { 'Cache-Control': 'private, no-store' }
       : { 'Cache-Control': 'public, max-age=15' };
 
-    return json({ ok: true, record, isOwner }, { headers });
+    return json({ ok: true, record: publicRecord, isOwner }, { headers });
   } catch (err) {
     return json({ ok: false, message: err.message }, { status: 502 });
   }

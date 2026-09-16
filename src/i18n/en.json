@@ -85,7 +85,8 @@
     "requiredFields": "Please fill in all required fields in this step.",
     "links": "Links",
     "facebookPost": "Facebook post",
-    "discordServer": "Discord server"
+    "discordServer": "Discord server",
+    "messageOwner": "Message owner on Discord"
   },
   "auth": {
     "signingIn": "Signing in with Discord...",
