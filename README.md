@@ -106,7 +106,6 @@ response could be replayed to another visitor.
 
 ## Known gaps
 
-- `end_time` is not a column yet — listings have a start time only.
 - Discord **guild ownership** is not verified when a server is linked; proving it
   needs a live `/users/@me/guilds` call, which needs an OAuth access token the
   stateless session deliberately does not keep.
