@@ -9,6 +9,7 @@ const props = defineProps({
 
 const variants = {
   default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+  discord: 'bg-[#5865F2] text-white hover:bg-[#4752C4] shadow-md shadow-[#5865F2]/30',
   outline: 'border border-border bg-transparent hover:bg-muted hover:text-foreground',
   secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
   ghost: 'hover:bg-muted hover:text-foreground',

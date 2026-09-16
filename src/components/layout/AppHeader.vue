@@ -108,14 +108,15 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
           </div>
         </div>
 
-        <!-- Signed out: Discord sign-in -->
+        <!-- Signed out: Discord sign-in (CTA) -->
         <Button
           v-else
-          variant="default"
+          variant="discord"
           size="sm"
           @click="loginWithDiscord"
-          class="bg-[#5865F2] hover:bg-[#4752C4] text-white border-none px-2.5 sm:px-3"
+          class="px-3 sm:px-4 font-semibold"
         >
+          <i class="fab fa-discord"></i>
           Discord
         </Button>
       </div>
