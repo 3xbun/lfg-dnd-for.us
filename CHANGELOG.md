@@ -9,6 +9,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - **Tag input and filtering** — create tags by pressing Enter, and select available tags from the NocoDB-backed home page filter.
 
+### Changed
+
+- **Community links** — detail pages direct users to the listing's existing Facebook post or Discord server links.
+
+### Removed
+
+- **Join / Apply section** — removed the unused in-app application flow from listing detail pages.
+
 ## [1.0.0-beta.2] - 2026-09-16
 
 ### Added
