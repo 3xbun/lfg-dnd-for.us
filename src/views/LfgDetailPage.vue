@@ -40,7 +40,7 @@ const reporting = ref(false)
 const reportDone = ref(false)
 const reportError = ref('')
 
-const statusVariant = { Open: 'default', Full: 'secondary', Closed: 'destructive' }
+const statusVariant = { Open: 'success', Full: 'warning', Closed: 'destructive' }
 
 const locationLabel = computed(() => {
   const style = (post.value?.play_style || '').toLowerCase()

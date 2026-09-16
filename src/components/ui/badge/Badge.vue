@@ -8,6 +8,8 @@ const variants = {
   default: 'bg-primary text-primary-foreground',
   secondary: 'bg-secondary text-secondary-foreground',
   destructive: 'bg-destructive/10 text-destructive',
+  success: 'bg-success/10 text-success',
+  warning: 'bg-warning/10 text-warning',
   outline: 'border border-border text-foreground',
 }
 </script>

@@ -11,8 +11,8 @@ defineProps({
 })
 
 const statusVariant = {
-  Open: 'default',
-  Full: 'secondary',
+  Open: 'success',
+  Full: 'warning',
   Closed: 'destructive',
 }
 
