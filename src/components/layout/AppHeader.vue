@@ -54,20 +54,20 @@ function hideHint() {
 
 <template>
   <header class="sticky top-0 z-50 border-b border-border bg-header/80 backdrop-blur-md">
-    <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-6">
-      <router-link to="/" class="flex items-center">
-        <img src="/imgs/logo.png" alt="LFG DnD For Us" class="h-10 w-10 object-contain" />
+    <div class="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-6 sm:px-6">
+      <router-link to="/" class="flex shrink-0 items-center">
+        <img src="/imgs/logo.png" alt="LFG DnD For Us" class="h-9 w-9 object-contain sm:h-10 sm:w-10" />
       </router-link>
 
-      <nav class="flex flex-1 items-center gap-1">
+      <nav class="flex min-w-0 flex-1 items-center gap-1 overflow-hidden">
         <router-link to="/">
-          <Button variant="ghost" size="sm">{{ t('nav.home') }}</Button>
+          <Button variant="ghost" size="sm" class="text-xs sm:text-sm">{{ t('nav.home') }}</Button>
         </router-link>
 
         <!-- My Groups: always visible; disabled + hinted when signed out -->
         <span v-if="isLoggedIn()">
           <router-link to="/my">
-            <Button variant="ghost" size="sm">{{ t('nav.myGroups') }}</Button>
+            <Button variant="ghost" size="sm" class="text-xs sm:text-sm">{{ t('nav.myGroups') }}</Button>
           </router-link>
         </span>
         <!-- disabled controls do not receive hover/click events, so the hint
@@ -78,7 +78,7 @@ function hideHint() {
           @mouseenter="showHint('groups')"
           @mouseleave="hideHint"
         >
-          <Button variant="ghost" size="sm" disabled aria-disabled="true" class="opacity-40">
+          <Button variant="ghost" size="sm" disabled aria-disabled="true" class="opacity-40 text-xs sm:text-sm">
             {{ t('nav.myGroups') }}
           </Button>
           <span
@@ -91,7 +91,7 @@ function hideHint() {
 
         </nav>
 
-      <div class="flex items-center gap-2">
+      <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
         <Button variant="ghost" size="sm" @click="toggleLocale" class="font-bold">
           {{ locale === 'th' ? 'EN' : 'TH' }}
         </Button>
@@ -112,7 +112,7 @@ function hideHint() {
           <Button variant="outline" size="sm" @click="handleLogout">{{ t('nav.logout') }}</Button>
         </template>
         <template v-else>
-          <Button variant="default" size="sm" @click="loginWithDiscord" class="bg-[#5865F2] hover:bg-[#4752C4] text-white border-none">
+          <Button variant="default" size="sm" @click="loginWithDiscord" class="bg-[#5865F2] hover:bg-[#4752C4] text-white border-none px-2.5 sm:px-3">
             Discord
           </Button>
         </template>
