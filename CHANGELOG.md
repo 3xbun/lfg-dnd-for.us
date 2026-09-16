@@ -3,6 +3,17 @@
 All notable changes to **LFG — D&D For Us** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.2] - 2026-09-16
+
+### Added
+
+- **Links step in the create wizard** — new 5th step (optional) to attach a Facebook post URL, Discord invite, and Discord server ID *while creating* the post, since people often post on Facebook/Discord before listing on LFG. Edit mode pre-fills existing links.
+- **Schedule step hint** — notes that day/start/end are optional for groups still gathering people; leave blank and update later.
+
+### Removed
+
+- **Timezone** — the app is Thailand-focused, so the per-post timezone field was dropped from the create wizard, detail page, i18n, and both create/update API endpoints.
+
 ## [1.0.0-beta.1] - 2026-09-16
 
 ### Fixed
