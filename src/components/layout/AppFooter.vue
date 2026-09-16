@@ -8,5 +8,9 @@
 </template>
 
 <script setup>
-const version = '1.0.0-beta.1'
+// Single source of truth: the version in package.json. Bump it there and the
+// footer follows automatically — no more drifting hardcoded strings.
+import pkg from '../../../package.json'
+
+const version = pkg.version
 </script>
