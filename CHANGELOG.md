@@ -3,6 +3,14 @@
 All notable changes to **LFG — D&D For Us** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.1] - 2026-09-16
+
+### Fixed
+
+- **Creating a post failed with "Save failed"** — `validateSessionTimes` was called but never imported in the create/edit endpoints (500 on every save)
+- **Edit/delete failed with 403 for the owner** — the one-to-one ownership link returns a singular payload that the link reader ignored, so ownership checks always failed
+- **Open and Closed badges looked the same** — both rendered in the red family; now Open is green, Full is amber, Closed is red
+
 ## [1.0.0-beta] - 2026-09-16
 
 First public beta of the Looking-For-Group platform for the Thai TTRPG community.

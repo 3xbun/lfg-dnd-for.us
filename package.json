@@ -1,7 +1,7 @@
 {
   "name": "lfg-dnd-for-us",
   "private": true,
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -8,5 +8,5 @@
 </template>
 
 <script setup>
-const version = '1.0.0-beta'
+const version = '1.0.0-beta.1'
 </script>
