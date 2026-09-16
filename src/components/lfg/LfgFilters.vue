@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 import { getOptions } from '@/api/lfg.js'
 import { dayLabel } from '@/utils/day.js'
@@ -91,6 +92,16 @@ function set(key, value) {
             <SelectItem v-for="v in options.day_of_week || []" :key="v" :value="v">{{ dayLabel(t, v) }}</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <Label class="text-xs text-muted-foreground">{{ t('home.tags') }}</Label>
+        <Input
+          :model-value="modelValue.tags || ''"
+          :placeholder="t('home.tagsPlaceholder')"
+          class="h-8 text-xs"
+          @update:model-value="set('tags', $event)"
+        />
       </div>
     </CardContent>
   </Card>

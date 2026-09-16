@@ -43,6 +43,11 @@ const reportError = ref('')
 
 const statusVariant = { Open: 'success', Full: 'warning', Closed: 'destructive' }
 
+function tagsForPost(value) {
+  if (Array.isArray(value)) return value.filter(Boolean)
+  return String(value || '').split(',').map((tag) => tag.trim()).filter(Boolean)
+}
+
 const locationLabel = computed(() => {
   const style = (post.value?.play_style || '').toLowerCase()
   if (style === 'online') return t('lfg.platform')
@@ -254,6 +259,11 @@ onMounted(loadPost)
               <Badge variant="secondary">{{ t('lfg.' + post.play_style?.toLowerCase()) }}</Badge>
             </div>
             <CardTitle class="text-2xl">{{ post.title }}</CardTitle>
+            <div v-if="tagsForPost(post.tags).length" class="flex flex-wrap gap-1.5 mt-3">
+              <Badge v-for="tag in tagsForPost(post.tags)" :key="tag" variant="secondary">
+                {{ tag }}
+              </Badge>
+            </div>
           </CardHeader>
 
           <CardContent class="flex flex-col gap-4">

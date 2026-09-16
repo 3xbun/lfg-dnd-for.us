@@ -15,6 +15,8 @@
     "gameSystem": "Game System",
     "playStyle": "Play Style",
     "status": "Status",
+    "tags": "Tags",
+    "tagsPlaceholder": "Filter by tag...",
     "all": "All",
     "noPosts": "No LFG posts found."
   },
@@ -24,6 +26,8 @@
     "gameSystem": "Game System",
     "description": "Description",
     "descriptionPlaceholder": "Describe your game, session expectations, house rules...",
+    "tags": "Tags",
+    "tagsPlaceholder": "e.g. beginner-friendly, one-shot, roleplay",
     "playStyle": "Play Style",
     "online": "Online",
     "offline": "Offline",

@@ -28,6 +28,12 @@ const playStyleIcons = {
   Hybrid: '<i class="fad fa-arrows-rotate"></i>',
 }
 const defaultPlayStyleIcon = '<i class="fad fa-gamepad"></i>'
+
+function tagsForPost(post) {
+  const value = post.tags
+  if (Array.isArray(value)) return value.filter(Boolean)
+  return String(value || '').split(',').map((tag) => tag.trim()).filter(Boolean)
+}
 </script>
 
 <template>
@@ -46,6 +52,11 @@ const defaultPlayStyleIcon = '<i class="fad fa-gamepad"></i>'
       </CardHeader>
 
       <CardContent>
+        <div v-if="tagsForPost(post).length" class="flex flex-wrap gap-1.5 mb-3">
+          <Badge v-for="tag in tagsForPost(post)" :key="tag" variant="secondary" class="text-xs">
+            {{ tag }}
+          </Badge>
+        </div>
         <div class="flex items-center gap-4 text-sm text-muted-foreground">
           <span class="flex items-center gap-1">
             <span v-html="playStyleIcons[post.play_style] || defaultPlayStyleIcon"></span>

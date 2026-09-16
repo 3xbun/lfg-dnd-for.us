@@ -15,6 +15,8 @@
     "gameSystem": "ระบบเกม",
     "playStyle": "รูปแบบการเล่น",
     "status": "สถานะ",
+    "tags": "แท็ก",
+    "tagsPlaceholder": "กรองตามแท็ก...",
     "all": "ทั้งหมด",
     "noPosts": "ไม่พบโพสต์ LFG"
   },
@@ -24,6 +26,8 @@
     "gameSystem": "ระบบเกม",
     "description": "รายละเอียด",
     "descriptionPlaceholder": "อธิบายเกมของคุณ ความคาดหวัง กฎพิเศษ...",
+    "tags": "แท็ก",
+    "tagsPlaceholder": "เช่น เหมาะสำหรับผู้เริ่มต้น, One Shot, เน้นสวมบทบาท",
     "playStyle": "รูปแบบการเล่น",
     "online": "ออนไลน์",
     "offline": "ออฟไลน์",

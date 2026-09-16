@@ -36,6 +36,7 @@ const form = ref({
   day_of_week: '',
   start_time: '',
   end_time: '',
+  tags: '',
 })
 
 // Optional links — people often post on Facebook / Discord *before* listing
@@ -157,6 +158,7 @@ async function loadPost() {
       day_of_week: post.day_of_week || '',
       start_time: (post.start_time || '').slice(0, 5),
       end_time: (post.end_time || '').slice(0, 5),
+      tags: Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || ''),
     }
     links.value = {
       facebook_url: post.facebook_url || '',
@@ -316,6 +318,11 @@ onMounted(async () => {
                   </SelectContent>
                 </Select>
               </template>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <Label>{{ t('lfg.tags') }}</Label>
+              <Input v-model="form.tags" :placeholder="t('lfg.tagsPlaceholder')" />
             </div>
           </div>
 

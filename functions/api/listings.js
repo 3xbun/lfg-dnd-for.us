@@ -25,6 +25,7 @@ const WRITABLE = [
   'day_of_week',
   'start_time',
   'end_time',
+  'tags',
 ];
 
 function pickWritable(body = {}) {
@@ -66,6 +67,8 @@ function buildWhere(url) {
   // The % wildcards must sit INSIDE the quotes — `(title,like,%"x"%)` is a
   // syntax error, `(title,like,"%x%")` is what NocoDB accepts.
   if (search) parts.push(`(title,like,${esc(`%${search}%`)})`);
+  const tags = q.get('tags');
+  if (tags) parts.push(`(tags,like,${esc(`%${tags}%`)})`);
   return parts.join('~and');
 }
 
