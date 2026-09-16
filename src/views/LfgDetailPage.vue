@@ -22,9 +22,6 @@ const { isLoggedIn, load, loginWithDiscord } = useAuth()
 const post = ref(null)
 const isOwner = ref(false)
 const loading = ref(true)
-const joining = ref(false)
-const joinSuccess = ref(false)
-const joinError = ref('')
 const deleting = ref(false)
 
 const links = ref({ facebook_url: '', discord_invite_url: '', discord_server_id: '' })
@@ -108,27 +105,6 @@ async function submitReport() {
     reportError.value = err?.response?.data?.message || t('common.error')
   } finally {
     reporting.value = false
-  }
-}
-
-async function handleJoin() {
-  if (!isLoggedIn()) {
-    const user = await load()
-    if (!user) {
-      loginWithDiscord()
-      return
-    }
-  }
-  joining.value = true
-  joinError.value = ''
-  try {
-    await api.joinListing(route.params.id)
-    joinSuccess.value = true
-    await loadPost()
-  } catch (err) {
-    joinError.value = err?.response?.data?.message || t('common.error')
-  } finally {
-    joining.value = false
   }
 }
 
@@ -346,21 +322,6 @@ onMounted(loadPost)
             </CardContent>
           </Card>
 
-          <Card v-if="post.status === 'Open' && !isOwner">
-            <CardHeader class="pb-3">
-              <CardTitle class="text-sm">{{ t('lfg.join') }}</CardTitle>
-            </CardHeader>
-            <CardContent class="flex flex-col gap-3">
-              <p v-if="joinSuccess" class="text-sm text-green-500">{{ t('lfg.joinSuccess') }}</p>
-              <template v-else>
-                <p class="text-sm text-muted-foreground">{{ t('lfg.applyMessage') }}</p>
-                <p v-if="joinError" class="text-sm text-destructive">{{ joinError }}</p>
-                <Button class="w-full" :disabled="joining" @click="handleJoin">
-                  {{ isLoggedIn() ? t('lfg.applySend') : t('lfg.signInToJoin') }}
-                </Button>
-              </template>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </template>
