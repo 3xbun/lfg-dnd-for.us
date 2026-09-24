@@ -1,12 +1,15 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import * as api from '../api/lfg.js'
 import LfgCard from '../components/lfg/LfgCard.vue'
 import LfgFilters from '../components/lfg/LfgFilters.vue'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const posts = ref([])
 const loading = ref(true)
@@ -53,7 +56,15 @@ onMounted(loadPosts)
   <div class="mx-auto max-w-7xl px-6 py-8">
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-foreground mb-2">{{ t('home.title') }}</h1>
-      <p class="text-muted-foreground">{{ t('home.subtitle') }}</p>
+      <p class="text-muted-foreground mb-6">{{ t('home.subtitle') }}</p>
+      
+      <div class="flex flex-col items-center gap-2">
+        <Button variant="outline" @click="router.push('/map')" class="gap-2">
+          <i class="fa-solid fa-map-location-dot"></i>
+          {{ t('home.findStores') }}
+        </Button>
+        <p class="text-xs text-muted-foreground">{{ t('home.findStoresDesc') }}</p>
+      </div>
     </div>
 
     <div class="mb-6">

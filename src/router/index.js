@@ -8,6 +8,11 @@ const routes = [
     component: () => import('../views/HomePage.vue'),
   },
   {
+    path: '/map',
+    name: 'LfgMap',
+    component: () => import('../views/LfgMapPage.vue'),
+  },
+  {
     path: '/lfg/create',
     name: 'LfgCreate',
     component: () => import('../views/LfgCreatePage.vue'),

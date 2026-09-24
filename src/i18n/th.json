@@ -18,7 +18,9 @@
     "tags": "แท็ก",
     "tagsPlaceholder": "กรองตามแท็ก...",
     "all": "ทั้งหมด",
-    "noPosts": "ไม่พบโพสต์ LFG"
+    "noPosts": "ไม่พบโพสต์ LFG",
+    "findStores": "ค้นหาร้านค้าใกล้คุณ",
+    "findStoresDesc": "กำลังหาสถานที่เล่นเกม? ดูร้าน TTRPG รอบตัวคุณ"
   },
   "lfg": {
     "title": "หัวข้อ",
@@ -86,7 +88,10 @@
     "links": "ลิงก์",
     "facebookPost": "โพสต์ Facebook",
     "discordServer": "เซิร์ฟเวอร์ Discord",
-    "messageOwner": "ส่งข้อความหาเจ้าของโพสต์ใน Discord"
+    "messageOwner": "ส่งข้อความหาเจ้าของโพสต์ใน Discord",
+    "mapTitle": "ร้าน TTRPG ใกล้ตัวคุณ",
+    "mapSubtitle": "ค้นหาร้านบอร์ดเกมและอุปกรณ์สำหรับเซสชันถัดไป",
+    "loadingStores": "กำลังค้นหาร้านค้าในพื้นที่..."
   },
   "auth": {
     "signingIn": "กำลังเข้าสู่ระบบด้วย Discord...",

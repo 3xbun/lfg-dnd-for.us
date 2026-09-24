@@ -18,7 +18,9 @@
     "tags": "Tags",
     "tagsPlaceholder": "Filter by tag...",
     "all": "All",
-    "noPosts": "No LFG posts found."
+    "noPosts": "No LFG posts found.",
+    "findStores": "Find Local Stores",
+    "findStoresDesc": "Looking for a place to play? See TTRPG stores near you."
   },
   "lfg": {
     "title": "Title",
@@ -86,7 +88,10 @@
     "links": "Links",
     "facebookPost": "Facebook post",
     "discordServer": "Discord server",
-    "messageOwner": "Message owner on Discord"
+    "messageOwner": "Message owner on Discord",
+    "mapTitle": "TTRPG Stores Near Me",
+    "mapSubtitle": "Find local hobby stores for your next session",
+    "loadingStores": "Searching for local stores..."
   },
   "auth": {
     "signingIn": "Signing in with Discord...",
