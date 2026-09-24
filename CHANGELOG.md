@@ -3,6 +3,12 @@
 All notable changes to **LFG — D&D For Us** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.5] - 2026-09-24
+
+### Fixed
+
+- **Cloudflare Pages build failure** — `package-lock.json` was out of sync with `package.json` (lock still pinned `leaflet@2.0.0-alpha.1` and `leaflet-theme-control`, which `npm ci` rejected). Regenerated the lockfile; the unused `leaflet-theme-control` entry is gone.
+
 ## [1.0.0-beta.4] - 2026-09-24
 
 ### Added
