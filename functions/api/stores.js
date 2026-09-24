@@ -1,10 +1,10 @@
-import { noco } from '../_lib/noco.js'
+import { listRecords } from '../_lib/noco.js'
 
-export default async function handler(request, env) {
+export async function onRequestGet({ env }) {
   try {
     // Fetch all stores from the LFG_Stores table
     // Table ID: m6nzwxyk7i4923x
-    const records = await noco.listRecords(env, 'm6nzwxyk7i4923x')
+    const { records } = await listRecords(env, 'm6nzwxyk7i4923x', { pageSize: 100 })
 
     return new Response(JSON.stringify({
       records: records.map(r => {
@@ -15,13 +15,14 @@ export default async function handler(request, env) {
           name: r.Title,
           lat: parseFloat(lat),
           lon: parseFloat(lon),
-          region: r.Region
+          region: r.Region,
+          googleMap: r.GoogleMap
         }
       })
     }), {
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600' 
+        'Cache-Control': 'public, max-age=3600'
       }
     })
   } catch (error) {
